@@ -36,13 +36,13 @@ library(mice)
 imputed_mice <- impute_mar(simdaNA[, c("Y","X1.mis","X2")], mi = "mice",
 method = c("logreg", "polr", "polyreg"), m = 10,printFlag = FALSE)
 
-head(mice::complete(imputed_mice,1)) # pour la prémière imputation avec mice
+head(mice::complete(imputed_mice,1)) # imputation with mice
 
 library(jomo)
 # Imputation with jomo
 imputed_jomo <- impute_mar(data = simdaNA[, c("Y","X1.mis","X2")], mi = "jomo",
 m = 5, output=0)
 
-imputed_jomo[1504:1510,] # pour la prémière imputation avec jomo
+imputed_jomo[1504:1510,] #  imputation with jomo
 
 }

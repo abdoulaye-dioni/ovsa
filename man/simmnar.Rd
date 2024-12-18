@@ -40,16 +40,26 @@ simu <- data.frame(id = 1:1000,  Y = rbinom(1000, 1, 0.5),
           X1 = ordered(sample(1:5, 1000, replace = TRUE)),
           X2 = sample(letters[1:4], 1000, replace = TRUE))
 
+head(simu)
+
 simuNA <- simmnar( data = simu, Y = "Y",  id = "id", ord_var = "X1",
                          A = 1,  Prob.A = 0.3, B = 5,  Prob.B = 0.5)
 
-  head(simuNA)
+head(simuNA)
 
 # Example 2
 
- data("simda")
- head(simda)
-  simdaNA <- simmnar( data = simda, Y = "Y",  id = "id",
-  ord_var = "X1", A = 2,  Prob.A = 0.5, B = 4,  Prob.B = 0.8)
-  head(simdaNA)
+data("simda")
+head(simda)
+simdaNA <- simmnar( data = simda, Y = "Y",  id = "id",
+ord_var = "X1", A = 2,  Prob.A = 0.5, B = 4,  Prob.B = 0.8)
+
+head(simdaNA)
+
+summary(simdaNA)
 }
+\keyword{MNAR,}
+\keyword{data}
+\keyword{missing}
+\keyword{ordinal}
+\keyword{variable,}
