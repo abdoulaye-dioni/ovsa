@@ -25,24 +25,40 @@ This function imputes missing data in a dataset using either the \code{mice} or 
 }
 \examples{
 
-data("simda")
+data("simdaNA")
 
-simdaNA <- simmnar(simda, Y = "Y", id = "id", ord_var = "X1",
-                   A = 1, Prob.A = 0.5, B = 5, Prob.B = 0.8)
+summary(simdaNA)
 
 library(mice)
 
 # Imputation with mice
-imputed_mice <- impute_mar(simdaNA[, c("Y","X1.mis","X2")], mi = "mice",
+
+imputed_mice <- impute_mar(simdaNA[, c("Y","X1.mnar","X2")], mi = "mice",
 method = c("logreg", "polr", "polyreg"), m = 10,printFlag = FALSE)
 
 head(mice::complete(imputed_mice,1)) # imputation with mice
 
-library(jomo)
-# Imputation with jomo
-imputed_jomo <- impute_mar(data = simdaNA[, c("Y","X1.mis","X2")], mi = "jomo",
-m = 5, output=0)
 
-imputed_jomo[1504:1510,] #  imputation with jomo
+
+# Imputation with jomo
+
+data("simda2NA")
+
+summary(simda2NA)
+
+library(jomo)
+
+
+nimp <- 5
+nburn <- 10
+nbetween <- 10
+formula = y ~ x1.mnar + x2 + (1|clus)
+
+
+imputed_jomo <-  jomo.glmer( formula = as.formula(formula),
+data = simda2NA[, c("y", "x1.mnar", "x2", "clus")], nburn = nburn,
+nbetween = nbetween, nimp = nimp, output = 0)
+
+imputed_jomo[2050:2056,]
 
 }

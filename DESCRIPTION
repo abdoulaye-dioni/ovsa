@@ -7,7 +7,6 @@ Authors@R:
     person("Moore", "Lynne", , "lynne.moore@fmed.ulaval.ca", role = "aut"),
     person("Eslami", "Aida", , "aida.eslami@fmed.ulaval.ca", role = "aut"))
 Description: Conduct a sensitivity analysis for an MNAR ordinal variable.
-LazyDate: true
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -22,4 +21,3 @@ Imports:
     jomo,
     mice
 URL: https://github.com/abdoulaye-dioni/ovsa
-BugReports: https://github.com/abdoulaye-dioni/ovsa/issues

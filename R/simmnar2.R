@@ -16,9 +16,11 @@
 #' @param A A vector of values in `ord_var` defining group A.
 #' @param B A vector of values in `ord_var` defining group B.
 #' @param seed An optional random seed for reproducibility. Defaults to 123.
-#' @return A data frame with a new column named `<ord_var>.mis`, containing the ordinal variable
+#' @return A data frame with a new column named `<ord_var>.mnar`, containing the ordinal variable
 #'   with missing values introduced under the MNAR mechanism.
 #'
+#'
+#' @export
 #' @examples
 #'  data("simda2")
 #'  head(simda2)
@@ -34,7 +36,7 @@
 #'
 #'  summary(simda2NA)
 #'
-#' @export
+#'
 
 
 simmnar2 <- function(data, proba, cat_var, Y, id, ord_var, A, B, seed = 123) {
@@ -49,7 +51,7 @@ simmnar2 <- function(data, proba, cat_var, Y, id, ord_var, A, B, seed = 123) {
   if (!ord_var %in% names(data)) stop("The ordinal variable `ord_var` does not exist in the dataset.")
 
   # Create a copy of the ordinal variable for introducing missingness
-  new_ord_var <- paste0(ord_var, ".mis")
+  new_ord_var <- paste0(ord_var, ".mnar")
   data[[new_ord_var]] <- data[[ord_var]]
 
   # Internal function for MNAR mechanism within a stratum

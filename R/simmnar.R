@@ -65,7 +65,7 @@ simmnar <-  function(data, Y, id = NULL, ord_var, A, Prob.A, B, Prob.B) {
   if (anyNA(data[[ord_var]])) {
     warning("'ord_var' contains missing data. These missing values will be preserved.")
   }
-  new_var_name <- paste0(ord_var, ".mis")
+  new_var_name <- paste0(ord_var, ".mnar")
   data[[new_var_name]] <- data[[ord_var]]
   id.A <- which(data[[Y]] == 1 & data[[ord_var]] %in% A)
   if (length(id.A) > 0) {
