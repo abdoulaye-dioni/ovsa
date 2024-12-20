@@ -12,7 +12,7 @@ A data.frame with 2000 rows and 6 columns:
 \item{x1}{Ordered categorical variable.}
 \item{x2}{Categorical variable (factor).}
 \item{clus}{Cluster identifier.}
-\item{x1.mnar}{Ordered categorical variable with missing values.}
+\item{x1.mis}{Ordered categorical variable with missing values.}
 }
 }
 \source{

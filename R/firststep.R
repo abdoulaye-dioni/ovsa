@@ -21,7 +21,9 @@
 #'
 #' # Imputation with mice
 #'
-#' imputed_mice <- impute_mar(simdaNA[, c("Y","X1.mnar","X2")], mi = "mice",
+#' simdaNA$X1.mar <- simdaNA$X1.mis
+#'
+#' imputed_mice <- impute_mar(simdaNA[, c("Y","X1.mar","X2")], mi = "mice",
 #' method = c("logreg", "polr", "polyreg"), m = 10,printFlag = FALSE)
 #'
 #' head(mice::complete(imputed_mice,1)) # imputation with mice
@@ -34,17 +36,19 @@
 #'
 #' summary(simda2NA)
 #'
+#'simda2NA$x1.mar <- simda2NA$x1.mis
+#'
 #' library(jomo)
 #'
 #'
 #' nimp <- 5
 #' nburn <- 10
 #' nbetween <- 10
-#' formula = y ~ x1.mnar + x2 + (1|clus)
+#' formula = y ~ x1.mar + x2 + (1|clus)
 #'
 #'
 #' imputed_jomo <-  jomo.glmer( formula = as.formula(formula),
-#' data = simda2NA[, c("y", "x1.mnar", "x2", "clus")], nburn = nburn,
+#' data = simda2NA[, c("y", "x1.mar", "x2", "clus")], nburn = nburn,
 #' nbetween = nbetween, nimp = nimp, output = 0)
 #'
 #' imputed_jomo[2050:2056,]

@@ -28,7 +28,7 @@ one for group A and one for group B.}
 \item{seed}{An optional random seed for reproducibility. Defaults to 123.}
 }
 \value{
-A data frame with a new column named \verb{<ord_var>.mnar}, containing the ordinal variable
+A data frame with a new column named \verb{<ord_var>.mis}, containing the ordinal variable
 with missing values introduced under the MNAR mechanism.
 }
 \description{

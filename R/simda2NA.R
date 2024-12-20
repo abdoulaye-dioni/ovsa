@@ -11,7 +11,7 @@
 #'   \item{x1}{Ordered categorical variable.}
 #'   \item{x2}{Categorical variable (factor).}
 #'   \item{clus}{Cluster identifier.}
-#'   \item{x1.mnar}{Ordered categorical variable with missing values.}
+#'   \item{x1.mis}{Ordered categorical variable with missing values.}
 #' }
 #' @source Data generated using the `simulation_hierachical` function.`data-raw/simda2NA.R`
 "simda2NA"

@@ -26,8 +26,8 @@ test_that("simmnar works as expected", {
     Prob.B = 0.3
   )
 
-  expect_true(all(c("X2", "X2.mnar") %in% colnames(result)))
-  expect_true(anyNA(result$X2.mnar))
+  expect_true(all(c("X2", "X2.mis") %in% colnames(result)))
+  expect_true(anyNA(result$X2.mis))
 
   # Vérifier que les données originales sont préservées
   expect_equal(result$X2, data$X2)
