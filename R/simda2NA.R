@@ -1,8 +1,7 @@
-#' Hierarchical data with missing values
+#' Hierarchical data under missing not at random.
 #'
-#' The dataset `simda2NA` is an example generated from a hierarchical simulation.
-#' It includes simulated variables representing clusters, categorical covariates,
-#' and a binary response variable.
+#' The data `simda2NA` contains  missing not at random (MNAR) values in the
+#' hierarchical data.
 #'
 #' @format A data.frame with 2000 rows and 6 columns:
 #' \describe{
@@ -13,5 +12,5 @@
 #'   \item{clus}{Cluster identifier.}
 #'   \item{x1.mis}{Ordered categorical variable with missing values.}
 #' }
-#' @source Data generated using the `simulation_hierachical` function.`data-raw/simda2NA.R`
+#' @source The data was generated using the `simmnar2` function on the `simda2` data.
 "simda2NA"

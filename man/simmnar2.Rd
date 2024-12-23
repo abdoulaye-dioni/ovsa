@@ -2,9 +2,9 @@
 % Please edit documentation in R/simmnar2.R
 \name{simmnar2}
 \alias{simmnar2}
-\title{Simulate MNAR Missing Data for hierarchical data}
+\title{Simulation a Missing Not At Random (MNAR) Mechanism in the Hierarchical data}
 \usage{
-simmnar2(data, proba, cat_var, Y, id, ord_var, A, B, seed = 123)
+simmnar2(data, proba, cat_var, Y, id, ord_var, A, B)
 }
 \arguments{
 \item{data}{A data frame containing the dataset.}
@@ -24,18 +24,19 @@ one for group A and one for group B.}
 \item{A}{A vector of values in \code{ord_var} defining group A.}
 
 \item{B}{A vector of values in \code{ord_var} defining group B.}
-
-\item{seed}{An optional random seed for reproducibility. Defaults to 123.}
 }
 \value{
 A data frame with a new column named \verb{<ord_var>.mis}, containing the ordinal variable
 with missing values introduced under the MNAR mechanism.
 }
 \description{
-This function introduces missing data under a MNAR (Missing Not At Random) mechanism
-in an ordinal variable based on a stratified approach.
+This function simulates a Missing Not At Random (MNAR) mechanism by introducing
+missing values into an independent ordinal variable with specific probabilities
+based on a binary response variable and a independent categorical variable.
 }
 \examples{
+#-------------------------  Example  ------------------------------------#
+
  data("simda2")
  head(simda2)
 
@@ -43,6 +44,7 @@ in an ordinal variable based on a stratified approach.
  nrow = 2, byrow = FALSE,dimnames = list(c("0","1"),paste0("proba",1:4))))
  missing_prob
 
+ set.seed(215) # for reproducibility
  simda2NA <- simmnar2(data = simda2,proba = missing_prob,cat_var = "x2",
  Y = "y", id = "id", ord_var = "x1", A = 1, B = 3)
 
@@ -50,11 +52,10 @@ in an ordinal variable based on a stratified approach.
 
  summary(simda2NA)
 
-
 }
+\keyword{Context.}
+\keyword{Hierarchical}
 \keyword{MNAR,}
-\keyword{categorical}
-\keyword{data}
+\keyword{Simulation,}
+\keyword{data,}
 \keyword{missing}
-\keyword{ordinal}
-\keyword{variable,}

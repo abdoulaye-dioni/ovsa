@@ -1,12 +1,25 @@
 Package: ovsa
-Title: ordinal variable sensitivity analysis (ovsa)
+Title: ovsa: Ordinal Variable Sensitivity Analysis
 Version: 0.0.0.9000
 Authors@R: 
     c(person("Dioni", "Abdoulaye", , "abdoulayedioni3@gmail.com", role = c("aut", "cre")),
     person("Bureau", "Alexandre", , "alexandre.bureau@fmed.ulaval.ca", role = "aut"),
     person("Moore", "Lynne", , "lynne.moore@fmed.ulaval.ca", role = "aut"),
     person("Eslami", "Aida", , "aida.eslami@fmed.ulaval.ca", role = "aut"))
-Description: Conduct a sensitivity analysis for an MNAR ordinal variable.
+Description: 
+    The ovsa package implements a method for conducting sensitivity analysis. 
+    Imputation is a common technique for addressing missing data; however, 
+    when working with real data, the MCAR (Missing Completely at Random) 
+    and MAR (Missing At Random) assumptions may not accurately reflect the true
+    mechanisms behind the missing data. Therefore, it can be beneficial 
+    to consider the MNAR (Missing Not At Random) mechanism and use a 
+    sensitivity analysis approach to evaluate deviations from MAR. This method is 
+    based on an algorithm presented in the article titled  "Sensitivity Analysis 
+    Method in the Presence of a Missing Not at Random Ordinal Independent Variable." 
+    The package can be applied in both non-hierarchical  and hierarchical contexts 
+    of binary response. However, the method should be used with caution, as it 
+    heavily relies on the assumption that certain specific (overrepresented) categories
+    of an ordinal variable tend to be missing.
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

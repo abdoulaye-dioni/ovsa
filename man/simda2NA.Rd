@@ -3,7 +3,7 @@
 \docType{data}
 \name{simda2NA}
 \alias{simda2NA}
-\title{Hierarchical data with missing values}
+\title{Hierarchical data under missing not at random.}
 \format{
 A data.frame with 2000 rows and 6 columns:
 \describe{
@@ -16,14 +16,13 @@ A data.frame with 2000 rows and 6 columns:
 }
 }
 \source{
-Data generated using the \code{simulation_hierachical} function.\code{data-raw/simda2NA.R}
+The data was generated using the \code{simmnar2} function on the \code{simda2} data.
 }
 \usage{
 simda2NA
 }
 \description{
-The dataset \code{simda2NA} is an example generated from a hierarchical simulation.
-It includes simulated variables representing clusters, categorical covariates,
-and a binary response variable.
+The data \code{simda2NA} contains  missing not at random (MNAR) values in the
+hierarchical data.
 }
 \keyword{datasets}

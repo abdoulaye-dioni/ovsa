@@ -2,9 +2,9 @@
 % Please edit documentation in R/simmnar.R
 \name{simmnar}
 \alias{simmnar}
-\title{Simulation of MNAR Mechanism on ordinal variable}
+\title{Simulation a Missing Not At Random (MNAR) mechanism in the Non-Hierarchical data}
 \usage{
-simmnar(data, Y, id = NULL, ord_var, A, Prob.A, B, Prob.B)
+simmnar(data, Y, id = NULL, ord_var, A, probA, B, probB)
 }
 \arguments{
 \item{data}{A data.frame.}
@@ -17,25 +17,25 @@ simmnar(data, Y, id = NULL, ord_var, A, Prob.A, B, Prob.B)
 
 \item{A}{The levels of \code{ord_var} affected by the Group A mechanism.}
 
-\item{Prob.A}{The probability of introducing missing values for observations in Group \code{A}.}
+\item{probA}{The probability of introducing missing values for observations in Group \code{A}.}
 
 \item{B}{The levels of \code{ord_var} affected by the Group B mechanism.}
 
-\item{Prob.B}{The probability of introducing missing values for observations in Group \code{B}.}
+\item{probB}{The probability of introducing missing values for observations in Group \code{B}.}
 }
 \value{
-The \code{data.frame} with a new column containing the modified \code{ord_var},
+A \code{data.frame} with a new column containing the modified \code{ord_var},
 now including missing values.
 }
 \description{
-This function simulates a Missing Not At Random (MNAR) mechanism
-by introducing missing values into an ordinal variable, based on
-a binary response variable.
+This function simulates a MNAR mechanism
+by introducing missing values into an independent ordinal variable with
+specific probabilities,  based on a binary response variable.
 }
 \examples{
-# Example 1
+#-------------------------  Example 1 ------------------------------------#
 
-set.seed(123) # Ensure reproducibility
+set.seed(123) # for reproducibility
 simu <- data.frame(id = 1:1000,  Y = rbinom(1000, 1, 0.5),
           X1 = ordered(sample(1:5, 1000, replace = TRUE)),
           X2 = sample(letters[1:4], 1000, replace = TRUE))
@@ -43,23 +43,25 @@ simu <- data.frame(id = 1:1000,  Y = rbinom(1000, 1, 0.5),
 head(simu)
 
 simuNA <- simmnar( data = simu, Y = "Y",  id = "id", ord_var = "X1",
-                         A = 1,  Prob.A = 0.3, B = 5,  Prob.B = 0.5)
+                         A = 1,  probA = 0.3, B = 5,  probB = 0.5)# use simmnar
 
 head(simuNA)
 
-# Example 2
+#-------------------------  Example 2 ------------------------------------#
 
+#' set.seed(321) # for reproducibility
 data("simda")
 head(simda)
 simdaNA <- simmnar( data = simda, Y = "Y",  id = "id",
-ord_var = "X1", A = 2,  Prob.A = 0.5, B = 4,  Prob.B = 0.8)
+ord_var = "X1", A = 2,  probA = 0.5, B = 4,  probB = 0.8) # use simmnar
 
 head(simdaNA)
 
 summary(simdaNA)
 }
+\keyword{Context.}
 \keyword{MNAR,}
-\keyword{data}
+\keyword{Non-Hierarchical}
+\keyword{Simulation,}
+\keyword{data,}
 \keyword{missing}
-\keyword{ordinal}
-\keyword{variable,}

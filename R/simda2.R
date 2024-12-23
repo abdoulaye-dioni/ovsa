@@ -1,9 +1,8 @@
-#' Example of Simulated Data for a Hierarchical Structure
+#' Hierarchical data
 #'
-#' The dataset `simda2` is an example generated from a hierarchical simulation.
-#' It includes simulated variables representing clusters, categorical covariates,
-#' and a binary response variable.
+#' `simda2` is an example of a hierarchical data.
 #'
+#' @name simda2
 #' @format A data.frame with 2000 rows and 5 columns:
 #' \describe{
 #'   \item{id}{Unique identifier for each observation.}
@@ -12,5 +11,5 @@
 #'   \item{x2}{Categorical variable (factor).}
 #'   \item{clus}{Cluster identifier.}
 #' }
-#' @source Data generated using the `simulation_hierachical` function.`data-raw/simda2.R`
+#' @source Generated with the script located in`data-raw/simda2.R`
 "simda2"

@@ -21,9 +21,9 @@ test_that("simmnar works as expected", {
     id = "ID",
     ord_var = "X2",
     A = c("low", "medium"),
-    Prob.A = 0.5,
+    probA = 0.5,
     B = c("medium", "high"),
-    Prob.B = 0.3
+    probB = 0.3
   )
 
   expect_true(all(c("X2", "X2.mis") %in% colnames(result)))

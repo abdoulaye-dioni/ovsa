@@ -3,7 +3,7 @@
 \docType{data}
 \name{simda}
 \alias{simda}
-\title{Example Dataset: simda}
+\title{Non hierarchical data}
 \format{
 A data frame with 1000 rows and 4 columns:
 \describe{
@@ -20,12 +20,6 @@ Generated with the script located in \code{data-raw/simda.R}.
 simda
 }
 \description{
-This dataset is a generated example for the package. It contains four variables:
-\itemize{
-\item A binary response variable "Y".
-\item An ordinal variable "X1" with 5 categories.
-\item A categorical variable "X2" with 4 categories.
-\item A unique identifier "id" for each observation.
-}
+\code{simda} is an example of a non hierarchical data.
 }
 \keyword{datasets}

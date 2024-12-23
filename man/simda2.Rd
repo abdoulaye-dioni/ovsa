@@ -3,7 +3,7 @@
 \docType{data}
 \name{simda2}
 \alias{simda2}
-\title{Example of Simulated Data for a Hierarchical Structure}
+\title{Hierarchical data}
 \format{
 A data.frame with 2000 rows and 5 columns:
 \describe{
@@ -15,14 +15,12 @@ A data.frame with 2000 rows and 5 columns:
 }
 }
 \source{
-Data generated using the \code{simulation_hierachical} function.\code{data-raw/simda2.R}
+Generated with the script located in\code{data-raw/simda2.R}
 }
 \usage{
 simda2
 }
 \description{
-The dataset \code{simda2} is an example generated from a hierarchical simulation.
-It includes simulated variables representing clusters, categorical covariates,
-and a binary response variable.
+\code{simda2} is an example of a hierarchical data.
 }
 \keyword{datasets}

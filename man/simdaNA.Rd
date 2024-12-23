@@ -3,31 +3,25 @@
 \docType{data}
 \name{simdaNA}
 \alias{simdaNA}
-\title{Example Dataset with missing data: simdaNA}
+\title{Non hierarchical data under missing not at random.}
 \format{
 A data frame with 1000 rows and 5 columns:
 \describe{
-\item{id}{Unique identifier for observations.}
+\item{id}{Unique identifier for each observation.}
 \item{Y}{Binary response variable, with values 0 and 1.}
 \item{X1}{Ordinal variable with 5 categories (1 to 5).}
 \item{X2}{Categorical variable with 4 categories (1 to 4).}
-\item{X1.mis}{Ordinal variable with missing values.}
+\item{X1.mis}{Ordinal variable derived from \code{X1}, containing missing values.}
 }
 }
 \source{
-Generated with the script located in \code{data-raw/simdaNA.R}.
+The data was generated using the \code{simmnar} function on the \code{simda} data.
 }
 \usage{
 simdaNA
 }
 \description{
-This dataset is a generated example for the package. It contains four variables:
-\itemize{
-\item A binary response variable "Y".
-\item An ordinal variable "X1" with 5 categories.
-\item A categorical variable "X2" with 4 categories.
-\item A unique identifier "id" for each observation.
-\item An ordinal variable "X1.mis" under MNAR.
-}
+The data \code{simdaNA} contains  missing not at random (MNAR) values in the
+non hierarchical data.
 }
 \keyword{datasets}

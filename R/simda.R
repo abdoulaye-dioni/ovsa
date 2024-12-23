@@ -1,11 +1,9 @@
-#' Example Dataset: simda
+#' Non hierarchical data
 #'
-#' This dataset is a generated example for the package. It contains four variables:
-#' - A binary response variable "Y".
-#' - An ordinal variable "X1" with 5 categories.
-#' - A categorical variable "X2" with 4 categories.
-#' - A unique identifier "id" for each observation.
+#' `simda` is an example of a non hierarchical data.
 #'
+#'
+#' @name simda
 #' @format A data frame with 1000 rows and 4 columns:
 #' \describe{
 #'   \item{id}{Unique identifier for observations.}
