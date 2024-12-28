@@ -2,7 +2,7 @@
 % Please edit documentation in R/simmnar.R
 \name{simmnar}
 \alias{simmnar}
-\title{Simulation a Missing Not At Random (MNAR) mechanism in the Non-Hierarchical data}
+\title{Simulate a Missing Not At Random (MNAR) mechanism in the Non-Hierarchical data}
 \usage{
 simmnar(data, Y, id = NULL, ord_var, A, probA, B, probB)
 }
@@ -33,7 +33,7 @@ by introducing missing values into an independent ordinal variable with
 specific probabilities,  based on a binary response variable.
 }
 \examples{
-#-------------------------  Example 1 ------------------------------------#
+#  Example 1
 
 set.seed(123) # for reproducibility
 simu <- data.frame(id = 1:1000,  Y = rbinom(1000, 1, 0.5),
@@ -47,7 +47,9 @@ simuNA <- simmnar( data = simu, Y = "Y",  id = "id", ord_var = "X1",
 
 head(simuNA)
 
-#-------------------------  Example 2 ------------------------------------#
+
+
+#  Example 2
 
 #' set.seed(321) # for reproducibility
 data("simda")

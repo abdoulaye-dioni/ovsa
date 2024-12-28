@@ -1,81 +1,79 @@
-#' Impute missing data under Missing At Random using mice or jomo
+#' Impute Missing Data under Missing At Random using mice or jomo
 #'
-#' This function imputes missing data in a dataset using either the `mice` or `jomo` package.
+#' This function performs imputation of missing data in a dataset using either
+#' the `mice` or `jomo` package, depending on the specified method. The `mice`
+#' package uses multiple imputation by chained equations, while `jomo` employs
+#' a multilevel imputation approach.
 #'
-#' @param data A data frame containing missing values to be imputed.
-#' @param mi A character string specifying the imputation method: "mice" or "jomo".
-#' @param m Number of imputations to perform (default is 5).
-#' @param seed A seed for reproducibility (default is 123).
-#' @param ... Additional arguments passed to the imputation functions.
+#' @name firststep
+#' @param data A dataframe containing missing values to be imputed.
+#' @param mi A character string specifying the imputation method: either `"mice"` or `"jomo"`.
+#' @param ... Additional arguments passed to the respective imputation functions.
 #'
-#' @return A list containing imputed datasets (`mice` output) or a single completed dataset (`jomo` output).
+#' @return For `mi = "mice"`, returns a `mids` object containing multiple imputations.
+#' For `mi = "jomo"`, returns a single completed dataset or a list, depending on the
+#' arguments and output type of `jomo`.
 #'
 #' @export
+#'
 #' @examples
 #'
+#'
+#'
 #' data("simdaNA")
-#'
 #' summary(simdaNA)
-#'
 #' library(mice)
-#'
-#' # Imputation with mice
-#'
 #' simdaNA$X1.mar <- simdaNA$X1.mis
+#' imputed_mice <- firststep(
+#'   data = simdaNA[, c("Y", "X1.mar", "X2")],
+#'   mi = "mice",
+#'   method = c("logreg", "polr", "polyreg"),
+#'   m = 10,
+#'   printFlag = FALSE
+#' )
+#' head(complete(imputed_mice, 1)) # View the first imputed dataset
 #'
-#' imputed_mice <- impute_mar(simdaNA[, c("Y","X1.mar","X2")], mi = "mice",
-#' method = c("logreg", "polr", "polyreg"), m = 10,printFlag = FALSE)
+#' #---------  Example 2: Imputation with jomo -------------------------#
 #'
-#' head(mice::complete(imputed_mice,1)) # imputation with mice
-#'
-#'
-#'
-#' # Imputation with jomo
-#'
+#' # Example 2: Imputation with jomo
 #' data("simda2NA")
-#'
 #' summary(simda2NA)
-#'
-#'simda2NA$x1.mar <- simda2NA$x1.mis
-#'
 #' library(jomo)
 #'
+#' simda2NA$x1.mar <- simda2NA$x1.mis
+#' formula <- y ~ x1.mar + x2 + (1 | clus)
+#' imputed_jomo <- firststep(
+#'   data = simda2NA[, c("y", "x1.mar", "x2", "clus")],
+#'   mi = "jomo",
+#'   formula = formula,
+#'   nimp = 5,
+#'   nburn = 10,
+#'   nbetween = 10,
+#'   output=0
+#' )
+#' head((mitml::jomo2mitml.list(imputed_jomo))[[1]]) # Convert jomo output to mitml format
 #'
-#' nimp <- 5
-#' nburn <- 10
-#' nbetween <- 10
-#' formula = y ~ x1.mar + x2 + (1|clus)
-#'
-#'
-#' imputed_jomo <-  jomo.glmer( formula = as.formula(formula),
-#' data = simda2NA[, c("y", "x1.mar", "x2", "clus")], nburn = nburn,
-#' nbetween = nbetween, nimp = nimp, output = 0)
-#'
-#' imputed_jomo[2050:2056,]
-#'
+firststep <- function(data, mi = c("mice", "jomo"), ...) {
+  # Validate the chosen method
+  mi <- match.arg(mi)
 
-impute_mar <- function(data, mi = c("mice","jomo"), m = 5, seed = 123, ...) {
-  # Load required packages
-  if (!requireNamespace("mice", quietly = TRUE)) stop("Please install the 'mice' package.")
-  if (!requireNamespace("jomo", quietly = TRUE)) stop("Please install the 'jomo' package.")
-
-  # Set seed for reproducibility
-  set.seed(seed)
-
+  # Load required packages based on the method
   if (mi == "mice") {
-    # Use mice for imputation
-    imputed <- mice::mice(data, m = m, ...)
+    if (!requireNamespace("mice", quietly = TRUE)) {
+      stop("Please install the 'mice' package to use this function.")
+    }
+    # Perform imputation using mice
+    imputed <- mice::mice(data, ...)
     return(imputed)  # Returns a mids object
   } else if (mi == "jomo") {
-    # Convert categorical variables to factors for jomo
-    data <- data.frame(lapply(data, function(x) {
-      if (is.character(x)) as.factor(x) else x
-    }))
-
-    # Use jomo for imputation
-    imputed <- jomo::jomo1(Y = data, nimp = m,...)
+    if (!requireNamespace("jomo", quietly = TRUE)) {
+      stop("Please install the 'jomo' package to use this function.")
+    }
+    # Perform imputation using jomo
+    imputed <- jomo::jomo.glmer(data, ...)
     return(imputed)  # Returns a completed dataset
   } else {
+    # This case should not occur due to match.arg()
     stop("Invalid method. Please choose 'mice' or 'jomo'.")
   }
 }

@@ -2,14 +2,14 @@
 % Please edit documentation in R/simmnar2.R
 \name{simmnar2}
 \alias{simmnar2}
-\title{Simulation a Missing Not At Random (MNAR) Mechanism in the Hierarchical data}
+\title{Simulate a Missing Not At Random (MNAR) Mechanism in the Hierarchical data}
 \usage{
 simmnar2(data, proba, cat_var, Y, id, ord_var, A, B)
 }
 \arguments{
-\item{data}{A data frame containing the dataset.}
+\item{data}{A dataframe containing the dataset.}
 
-\item{proba}{A named list or data frame containing the probabilities of missingness
+\item{proba}{A named list or dataframe containing the probabilities of missingness
 for each stratum of \code{cat_var}. Each stratum must contain a vector of two probabilities:
 one for group A and one for group B.}
 
@@ -21,12 +21,12 @@ one for group A and one for group B.}
 
 \item{ord_var}{The name of the ordinal variable where missingness will be introduced.}
 
-\item{A}{A vector of values in \code{ord_var} defining group A.}
+\item{A}{a vector of values in \code{ord_var} defining group A.}
 
-\item{B}{A vector of values in \code{ord_var} defining group B.}
+\item{B}{a vector of values in \code{ord_var} defining group B.}
 }
 \value{
-A data frame with a new column named \verb{<ord_var>.mis}, containing the ordinal variable
+A dataframe with a new column named \verb{<ord_var>.mis}, containing the ordinal variable
 with missing values introduced under the MNAR mechanism.
 }
 \description{
@@ -35,7 +35,6 @@ missing values into an independent ordinal variable with specific probabilities
 based on a binary response variable and a independent categorical variable.
 }
 \examples{
-#-------------------------  Example  ------------------------------------#
 
  data("simda2")
  head(simda2)

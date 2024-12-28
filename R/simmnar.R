@@ -1,4 +1,4 @@
-#' Simulation a Missing Not At Random (MNAR) mechanism in the Non-Hierarchical data
+#' Simulate a Missing Not At Random (MNAR) mechanism in the Non-Hierarchical data
 #'
 #' This function simulates a MNAR mechanism
 #' by introducing missing values into an independent ordinal variable with
@@ -21,7 +21,7 @@
 #'
 #' @export
 #' @examples
-#' #-------------------------  Example 1 ------------------------------------#
+#' #  Example 1
 #'
 #' set.seed(123) # for reproducibility
 #' simu <- data.frame(id = 1:1000,  Y = rbinom(1000, 1, 0.5),
@@ -35,7 +35,9 @@
 #'
 #' head(simuNA)
 #'
-#' #-------------------------  Example 2 ------------------------------------#
+#'
+#'
+#' #  Example 2
 #'
 #'#' set.seed(321) # for reproducibility
 #' data("simda")
@@ -49,7 +51,7 @@
 
 
 simmnar <-  function(data, Y, id = NULL, ord_var, A, probA, B, probB) {
-  if (!is.data.frame(data)) stop("'data' must be a data frame.")
+  if (!is.data.frame(data)) stop("'data' must be a dataframe.")
   if (is.null(id)) {
     id <- seq_len(nrow(data))
   }

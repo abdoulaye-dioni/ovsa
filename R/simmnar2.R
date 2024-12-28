@@ -1,4 +1,4 @@
-#' Simulation a Missing Not At Random (MNAR) Mechanism in the Hierarchical data
+#' Simulate a Missing Not At Random (MNAR) Mechanism in the Hierarchical data
 #'
 #' This function simulates a Missing Not At Random (MNAR) mechanism by introducing
 #' missing values into an independent ordinal variable with specific probabilities
@@ -8,8 +8,8 @@
 #'
 #' @name simmnar2
 #' @keywords MNAR,  missing data, Simulation,  Hierarchical Context.
-#' @param data A data frame containing the dataset.
-#' @param proba A named list or data frame containing the probabilities of missingness
+#' @param data A dataframe containing the dataset.
+#' @param proba A named list or dataframe containing the probabilities of missingness
 #'   for each stratum of `cat_var`. Each stratum must contain a vector of two probabilities:
 #'   one for group A and one for group B.
 #' @param cat_var The name of the categorical variable (stratification variable).
@@ -18,13 +18,12 @@
 #' @param ord_var The name of the ordinal variable where missingness will be introduced.
 #' @param A a vector of values in `ord_var` defining group A.
 #' @param B a vector of values in `ord_var` defining group B.
-#' @return A data frame with a new column named `<ord_var>.mis`, containing the ordinal variable
+#' @return A dataframe with a new column named `<ord_var>.mis`, containing the ordinal variable
 #'   with missing values introduced under the MNAR mechanism.
 #'
 #'
 #' @export
 #' @examples
-#' #-------------------------  Example  ------------------------------------#
 #'
 #'  data("simda2")
 #'  head(simda2)
@@ -46,9 +45,9 @@
 simmnar2 <- function(data, proba, cat_var, Y, id, ord_var, A, B) {
 
   # Preliminary checks
-  if (!is.data.frame(data)) stop("`data` must be a data frame.")
+  if (!is.data.frame(data)) stop("`data` must be a dataframe.")
   if (!is.vector(proba) && !is.data.frame(proba) && !is.list(proba))
-    stop("`proba` must be a list or data frame with probabilities for each stratum.")
+    stop("`proba` must be a list or dataframe with probabilities for each stratum.")
   if (!cat_var %in% names(data)) stop("The specified `cat_var` does not exist in the dataset.")
   if (!Y %in% names(data)) stop("The variable `Y` does not exist in the dataset.")
   if (!id %in% names(data)) stop("The variable `id` does not exist in the dataset.")
@@ -89,7 +88,7 @@ simmnar2 <- function(data, proba, cat_var, Y, id, ord_var, A, B) {
       probA <- proba[stratum, 1]
       probB <- proba[stratum, 2]
     } else {
-      stop("`proba` must be either a named list or data frame.")
+      stop("`proba` must be either a named list or dataframe.")
     }
 
     # Apply MNAR mechanism

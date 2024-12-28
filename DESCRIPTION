@@ -27,10 +27,12 @@ RoxygenNote: 7.3.2
 Depends: 
     R (>= 3.5.0)
 LazyData: true
-Suggests: 
+Suggests:
+    mitml,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
     jomo,
-    mice
+    mice,
+    MASS
 URL: https://github.com/abdoulaye-dioni/ovsa
