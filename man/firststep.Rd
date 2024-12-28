@@ -41,7 +41,8 @@ imputed_mice <- firststep(
 )
 head(complete(imputed_mice, 1)) # View the first imputed dataset
 
-#---------  Example 2: Imputation with jomo -------------------------#
+
+
 
 # Example 2: Imputation with jomo
 data("simda2NA")

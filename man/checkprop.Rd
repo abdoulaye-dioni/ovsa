@@ -2,7 +2,7 @@
 % Please edit documentation in R/checkprop.R
 \name{checkprop}
 \alias{checkprop}
-\title{Check the Plausibility of Imputed Data under MAR and MNAR Mechanisms.}
+\title{Check the plausibility of imputed data under MAR and MNAR Mechanisms.}
 \usage{
 checkprop(data, ord_mar, ord_mis, manydelta, plot = TRUE)
 }
@@ -17,17 +17,19 @@ obtained under the MAR mechanism.}
 obtained under the MNAR mechanism.}
 
 \item{manydelta}{A data frame containing a matrix with dimensions equal to
-the number of levels of the ordinal variable multiplied by \(p\), where \(p\) is the
+the number of levels of the ordinal variable multiplied by \code{p}),
+where \code{p} is the
 number of columns representing different MNAR conditions.}
 
-\item{plot}{A logical value. If \code{TRUE}, the function returns both the proportion table and a plot.
+\item{plot}{A logical value. If \code{TRUE}, the function returns both the
+proportion table and a plot.
 If \code{FALSE}, only the proportion table is returned.}
 }
 \value{
 A list with two elements:
 \itemize{
-\item table A matrix of calculated proportions under MAR and MNAR mechanisms.
-\item plot (Optional) A ggplot2 object visualizing the proportions.
+\item \code{table} A matrix of calculated proportions under MAR and MNAR mechanisms.
+\item \code{plot (Optional)} A ggplot2 object visualizing the proportions.
 }
 }
 \description{

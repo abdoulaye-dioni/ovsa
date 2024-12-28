@@ -13,7 +13,24 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ovsa (ordinal variable sensitivity analysis)
+# Title and Package description
+
+## Title
+
+**ovsa**: (ordinal variable sensitivity analysis)
+
+## Description
+
+The goal of *ovsa* package is to perform sensitivity analysis for ordinal variable  when specific catégories of ordinal variable tend to be missing
+(Missing Not At Random).
+
+Our sensitivity analysis containes three step
+
+1. Performing MI under MAR
+
+2. Modifying the imputed data to reflect plausible scenarios under MNAR
+
+3. Analyzing the modified data and combining the results according to Rubin’s rule.
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -38,15 +55,31 @@ devtools::install_github("abdoulaye-dioni/ovsa")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
 library(ovsa)
-## basic example code
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+Below is a minimal working example demonstrating the usage of the ovsa package.
 
+```{r}
+head(simdaNA)
+str(simdaNA)
+imputed_mice <- firststep(simdaNA[, c("Y","X1.mis","X2")], mi = "mice",
+method = c("logreg", "polr", "polyreg"), m = 10,printFlag = FALSE)
+library(mice)
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+summary(complete(imputed_mice,1))
+#Formula for ordinal regression
+formula <- "X1.mis.mar ~ Y + X2"
+manydelta <- data.frame( delta1 = c(0,0,0,0), delta2 = c(0,-1,2,0),
+delta3 = c(0,0.5,0,0.5), delta4 = c(-1,0.5,0,1))
+level_ord_var = 5
+seed = 123
+# Execution of the complete function
+ out <- secondstep( data = simdaNA, mardata = imputed_mice,
+level_ord_var = level_ord_var, formula = formula, manydelta = manydelta,
+seed = seed)
+summary(out$mnardata[[2]])
+```
 

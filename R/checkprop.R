@@ -1,4 +1,4 @@
-#' Check the Plausibility of Imputed Data under MAR and MNAR Mechanisms.
+#' Check the plausibility of imputed data under MAR and MNAR Mechanisms.
 #'
 #' This function calculates proportions for each level under MAR and MNAR of the ordinal
 #' variable, computed across individuals initially missing for the specified variable.
@@ -12,13 +12,15 @@
 #' @param ord_mis A character string specifying the name of the ordinal variable
 #' obtained under the MNAR mechanism.
 #' @param manydelta A data frame containing a matrix with dimensions equal to
-#' the number of levels of the ordinal variable multiplied by \(p\), where \(p\) is the
+#' the number of levels of the ordinal variable multiplied by \code{p}),
+#' where \code{p} is the
 #' number of columns representing different MNAR conditions.
-#' @param plot A logical value. If `TRUE`, the function returns both the proportion table and a plot.
+#' @param plot A logical value. If `TRUE`, the function returns both the
+#' proportion table and a plot.
 #'             If `FALSE`, only the proportion table is returned.
 #' @return A list with two elements:
-#'   - table A matrix of calculated proportions under MAR and MNAR mechanisms.
-#'   - plot (Optional) A ggplot2 object visualizing the proportions.
+#'   - \code{table} A matrix of calculated proportions under MAR and MNAR mechanisms.
+#'   - \code{plot (Optional)} A ggplot2 object visualizing the proportions.
 #'
 #'
 #'
