@@ -52,6 +52,7 @@
 #'   nbetween = 10,
 #'   output=0
 #' )
+#'
 #' head((mitml::jomo2mitml.list(imputed_jomo))[[1]]) # Convert jomo output to mitml format
 #'
 firststep <- function(data, mi = c("mice", "jomo"), ...) {

@@ -13,11 +13,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-# **ovsa**: (ordinal variable sensitivity analysis)
+# **ovsa**: ordinal variable sensitivity analysis
 
-## Title
-
-**ovsa**: (ordinal variable sensitivity analysis)
 
 ## Description
 
@@ -59,12 +56,16 @@ library(ovsa)
 ```
 
 
+## Non hierarchical data from the `ovsa` package
+
 ```{r}
-data("simda") # non hierarchical data
+data("simda") 
 head(simda)
 ```
 
 
+
+## The `simmnar` function from the `ovsa` package
 
 Use the `simmnar` function from the `ovsa` package to simulate a Missing Not At Random (MNAR) mechanism in ordinal variables with specified probabilities for missing values.
  
@@ -77,27 +78,37 @@ ord_var = "X1", A = 2,  probA = 0.5, B = 4,  probB = 0.8) # use simmnar
 
 ```{r}
 head(simdaNA)
+```
+
+```{r}
 summary(simdaNA)
+```
+
+```{r}
 str(simdaNA)
 ```
 
-
+## The `firststep` function from the `ovsa` package
 
 Use the `firststep` function from the `ovsa` package to impute missing values in a non-hierarchical context. This function performs the first step of our sensitivity analysis for ordinal variables under a Missing Not At Random (MNAR) mechanism.
 
 ```{r}
+library(mice)
 imputed_mice <- firststep(simdaNA[, c("Y","X1.mis","X2")], mi = "mice",
 method = c("logreg", "polr", "polyreg"), m = 10,printFlag = FALSE)
 ```
 
 
+```{r}
+summary(complete(imputed_mice,1))
+```
+
+
+## The `secondstep` function from the `ovsa` package
 
 Use the `secondstep` function from the `ovsa` package to modifie imputed values in a non-hierarchical context. This function performs the second step of our sensitivity analysis for ordinal variables under a Missing Not At Random (MNAR) mechanism.
 
 ```{r}
-library(mice)
-
-summary(complete(imputed_mice,1))
 formula <- "X1.mis.mar ~ Y + X2"
 manydelta <- data.frame( delta1 = c(0,0,0,0), delta2 = c(0,-1,2,0),
 delta3 = c(0,0.5,0,0.5), delta4 = c(-1,0.5,0,1))
@@ -116,6 +127,7 @@ seed = seed)
 summary(out$mnardata[[2]])
 ```
 
+## The `checkprop` function from the `ovsa` package
 
 Use the `checkprop` function from the `ovsa` package to assess the plausibility of imputed data under the MAR mechanism and the modifications made under MNAR mechanisms.
 

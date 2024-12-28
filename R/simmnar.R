@@ -39,7 +39,7 @@
 #'
 #' #  Example 2
 #'
-#'#' set.seed(321) # for reproducibility
+#' set.seed(321) # for reproducibility
 #' data("simda")
 #' head(simda)
 #' simdaNA <- simmnar( data = simda, Y = "Y",  id = "id",

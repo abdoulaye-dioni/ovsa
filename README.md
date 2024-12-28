@@ -1,11 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# **ovsa**: (ordinal variable sensitivity analysis)
-
-## Title
-
-**ovsa**: (ordinal variable sensitivity analysis)
+# **ovsa**: ordinal variable sensitivity analysis
 
 ## Description
 
@@ -42,8 +38,10 @@ You can install the development version of ovsa from
 library(ovsa)
 ```
 
+## Non hierarchical data from the `ovsa` package
+
 ``` r
-data("simda") # non hierarchical data
+data("simda") 
 head(simda)
 #>   id X2 X1 Y
 #> 1  1  3  5 0
@@ -53,6 +51,8 @@ head(simda)
 #> 5  5  1  1 0
 #> 6  6  2  1 0
 ```
+
+## The `simmnar` function from the `ovsa` package
 
 Use the `simmnar` function from the `ovsa` package to simulate a Missing
 Not At Random (MNAR) mechanism in ordinal variables with specified
@@ -73,6 +73,9 @@ head(simdaNA)
 #> 4  4  1  1 0      1
 #> 5  5  1  1 0      1
 #> 6  6  2  1 0      1
+```
+
+``` r
 summary(simdaNA)
 #>        id         X2      X1      Y        X1.mis   
 #>  Min.   :   1.0   1:248   1:272   0:576   1   :272  
@@ -81,6 +84,9 @@ summary(simdaNA)
 #>  Mean   : 500.5   4:245   4:127           4   : 49  
 #>  3rd Qu.: 750.2           5:352           5   :352  
 #>  Max.   :1000.0                           NA's:107
+```
+
+``` r
 str(simdaNA)
 #> 'data.frame':    1000 obs. of  5 variables:
 #>  $ id    : int  1 2 3 4 5 6 7 8 9 10 ...
@@ -90,18 +96,10 @@ str(simdaNA)
 #>  $ X1.mis: Ord.factor w/ 5 levels "1"<"2"<"3"<"4"<..: 5 NA 5 1 1 1 3 3 5 1 ...
 ```
 
+## The `firststep` function from the `ovsa` package
+
 Use the `firststep` function from the `ovsa` package to impute missing
 values in a non-hierarchical context. This function performs the first
-step of our sensitivity analysis for ordinal variables under a Missing
-Not At Random (MNAR) mechanism.
-
-``` r
-imputed_mice <- firststep(simdaNA[, c("Y","X1.mis","X2")], mi = "mice",
-method = c("logreg", "polr", "polyreg"), m = 10,printFlag = FALSE)
-```
-
-Use the `secondstep` function from the `ovsa` package to modifie imputed
-values in a non-hierarchical context. This function performs the second
 step of our sensitivity analysis for ordinal variables under a Missing
 Not At Random (MNAR) mechanism.
 
@@ -115,7 +113,11 @@ library(mice)
 #> Les objets suivants sont masqués depuis 'package:base':
 #> 
 #>     cbind, rbind
+imputed_mice <- firststep(simdaNA[, c("Y","X1.mis","X2")], mi = "mice",
+method = c("logreg", "polr", "polyreg"), m = 10,printFlag = FALSE)
+```
 
+``` r
 summary(complete(imputed_mice,1))
 #>  Y       X1.mis  X2     
 #>  0:576   1:316   1:248  
@@ -123,6 +125,16 @@ summary(complete(imputed_mice,1))
 #>          3:144   3:260  
 #>          4: 55   4:245  
 #>          5:380
+```
+
+## The `secondstep` function from the `ovsa` package
+
+Use the `secondstep` function from the `ovsa` package to modifie imputed
+values in a non-hierarchical context. This function performs the second
+step of our sensitivity analysis for ordinal variables under a Missing
+Not At Random (MNAR) mechanism.
+
+``` r
 formula <- "X1.mis.mar ~ Y + X2"
 manydelta <- data.frame( delta1 = c(0,0,0,0), delta2 = c(0,-1,2,0),
 delta3 = c(0,0.5,0,0.5), delta4 = c(-1,0.5,0,1))
@@ -155,6 +167,8 @@ summary(out$mnardata[[2]])
 #> 
 ```
 
+## The `checkprop` function from the `ovsa` package
+
 Use the `checkprop` function from the `ovsa` package to assess the
 plausibility of imputed data under the MAR mechanism and the
 modifications made under MNAR mechanisms.
@@ -173,4 +187,4 @@ ord_mis = "X1.mis", manydelta = manydelta)
 #> $plot
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
