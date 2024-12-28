@@ -2,9 +2,9 @@
 % Please edit documentation in R/checkprop.R
 \name{checkprop}
 \alias{checkprop}
-\title{Check the Plausibility of Imputed Data under MAR and MNAR Mechanisms}
+\title{Check the Plausibility of Imputed Data under MAR and MNAR Mechanisms.}
 \usage{
-checkprop(data, ord_mar, ord_mis, manydelta)
+checkprop(data, ord_mar, ord_mis, manydelta, plot = TRUE)
 }
 \arguments{
 \item{data}{A list of data frames, where each data frame represents a dataset with
@@ -19,10 +19,16 @@ obtained under the MNAR mechanism.}
 \item{manydelta}{A data frame containing a matrix with dimensions equal to
 the number of levels of the ordinal variable multiplied by \(p\), where \(p\) is the
 number of columns representing different MNAR conditions.}
+
+\item{plot}{A logical value. If \code{TRUE}, the function returns both the proportion table and a plot.
+If \code{FALSE}, only the proportion table is returned.}
 }
 \value{
-A matrix containing the MAR and MNAR proportions for each level of the ordinal
-variable, computed across individuals initially missing for the specified variable.
+A list with two elements:
+\itemize{
+\item table A matrix of calculated proportions under MAR and MNAR mechanisms.
+\item plot (Optional) A ggplot2 object visualizing the proportions.
+}
 }
 \description{
 This function calculates proportions for each level under MAR and MNAR of the ordinal
@@ -37,13 +43,14 @@ imputed_mice <- firststep(simdaNA[, c("Y","X1.mis","X2")], mi = "mice",
 method = c("logreg", "polr", "polyreg"), m = 10,printFlag = FALSE)
 
 library(mice)
+library(ggplot2)
 summary(complete(imputed_mice,1))
 
 
 # Formula for ordinal regression
 formula <- "X1.mis.mar ~ Y + X2"
-manydelta <- data.frame( delta1 = c(0,0,0,0), delta2 = c(0,1,2,0),
-delta3 = c(1,0,0,2), delta4 = c(-1,0,0,-1))
+manydelta <- data.frame( delta1 = c(0,0,0,0), delta2 = c(0,-1,2,0),
+delta3 = c(0,0.5,0,0.5), delta4 = c(-1,0.5,0,1))
 level_ord_var = 5
 seed = 123
 
@@ -54,10 +61,11 @@ seed = seed)
 
 summary(out$mnardata[[2]])
 
-mytable <- checkprop( data = out$mnardata, ord_mar = "X1.mis.mar",
+
+checkprop(data = out$mnardata, ord_mar = "X1.mis.mar",
  ord_mis = "X1.mis", manydelta = manydelta)
 
- print(mytable)
+
 }
 \keyword{MAR,}
 \keyword{MNAR,}
