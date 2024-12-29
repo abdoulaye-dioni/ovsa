@@ -1,13 +1,13 @@
 #' Modifying the mice imputed data to reflect plausible scenarios under MNAR
 #'
 #' This function performs imputation of missing data in a dataset using either
-#' the MICE or JOMO package, depending on the specified method. The MICE
-#' package utilizes multiple imputation by chained equations, while JOMO employs
+#' the mice or jomo package, depending on the specified method. The mice
+#' package utilizes multiple imputation by chained equations, while jomo employs
 #' a multilevel imputation approach.
 #'
 #' @name secondstep
 #' @param data A dataframe containing missing values to be imputed.
-#' @param mardata Data imputed under MAR using the MICE package.
+#' @param mardata Data imputed under MAR using the mice package.
 #' @param level_ord_var The number of ordinal variable levels.
 #' @param manydelta A dataframe containing level_ord_var * p,
 #' where p is the number of columns.

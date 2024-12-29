@@ -1,4 +1,4 @@
-#' Simulate a Missing Not At Random (MNAR) Mechanism in the Hierarchical data
+#' Simulate a Missing Not At Random (MNAR) Mechanism in the Hierarchical data.
 #'
 #' This function simulates a Missing Not At Random (MNAR) mechanism by introducing
 #' missing values into an independent ordinal variable with specific probabilities
@@ -8,7 +8,7 @@
 #'
 #' @name simmnar2
 #' @keywords MNAR,  missing data, Simulation,  Hierarchical Context.
-#' @param data A dataframe containing the dataset.
+#' @param data A dataframe.
 #' @param proba A named list or dataframe containing the probabilities of missingness
 #'   for each stratum of `cat_var`. Each stratum must contain a vector of two probabilities:
 #'   one for group A and one for group B.
