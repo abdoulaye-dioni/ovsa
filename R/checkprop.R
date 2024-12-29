@@ -129,7 +129,8 @@ checkprop <- function(data, ord_mar, ord_mis, manydelta, plot = TRUE) {
   data_long$Level <- as.factor(data_long$Level)
 
   # Create the plot using ggplot2
-  plot <- ggplot2::ggplot(data_long, ggplot2::aes(x = Level, y = Proportion, group = Mechanism, color = Mechanism)) +
+  plot <- ggplot2::ggplot(data_long, ggplot2::aes(x = Level, y = Proportion,
+                                    group = Mechanism, color = Mechanism)) +
     ggplot2::geom_line() +
     ggplot2::geom_point() +
     ggplot2::scale_color_brewer(palette = "Set1", name = "Mechanism") +

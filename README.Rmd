@@ -136,3 +136,17 @@ checkprop(data = out$mnardata, ord_mar = "X1.mis.mar",
 ord_mis = "X1.mis", manydelta = manydelta)
 ```
 
+## The `thirdstep` function from the `ovsa package`
+
+For MAR result
+
+```{r}
+formula = "Y ~X1.mis.mar + X2"
+thirdstep(data = out$mnardata, formula = formula)
+```
+
+For MNAR result
+
+```{r}
+thirdstep(data = out$mnardata, manydelta = manydelta)
+```
