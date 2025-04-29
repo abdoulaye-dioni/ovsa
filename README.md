@@ -220,7 +220,7 @@ checkprop(data = out$mnardata,
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
-## Step 4: Final analysis with `thirdstep()`
+## Step 4: Final analysis with `thirdstep_mice()`
 
 ``` r
 formula <- "Y ~ X1.mis.mar + X2"

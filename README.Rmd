@@ -151,7 +151,7 @@ checkprop(data = out$mnardata,
 ```
 
 
-## Step 4: Final analysis with `thirdstep()`
+## Step 4: Final analysis with `thirdstep_mice()`
 
 ```{r}
 formula <- "Y ~ X1.mis.mar + X2"
