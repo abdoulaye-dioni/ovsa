@@ -7,9 +7,9 @@
 .DS_Store
 .quarto
 # Fichiers supprimés
-R/simda2NA.R
-.Rd2pdf14688/R2.tex
-R/simdaNA.R
-R/thirdstep.R
-data/simda2NA.rda
-data/simdaNA.rda
+
+*.tex
+*.log
+*.aux
+*.out
+*.toc

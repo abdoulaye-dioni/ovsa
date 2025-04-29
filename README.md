@@ -5,8 +5,6 @@
 
 ## Description
 
-## Description
-
 The goal of the ovsa package is to perform sensitivity analysis for
 ordinal variables when specific categories are prone to missingness
 under a Missing Not At Random (MNAR) mechanism.
