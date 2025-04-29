@@ -5,34 +5,44 @@
 
 ## Description
 
-The goal of the `ovsa` package is to perform sensitivity analysis for
-ordinal variables when specific categories of the ordinal variable are
-prone to missingness (Missing Not At Random).
+## Description
 
-Our sensitivity analysis containes three step
+The goal of the ovsa package is to perform sensitivity analysis for
+ordinal variables when specific categories are prone to missingness
+under a Missing Not At Random (MNAR) mechanism.
 
-1.  Performing MI under MAR
+1.  Our sensitivity analysis procedure involves three main steps:
 
-2.  Modifying the imputed data to reflect plausible scenarios under MNAR
+2.  Performing multiple imputation (MI) under the MAR assumption and
 
-3.  Analyzing the modified data and combining the results according to
-    Rubin’s rule.
+Modifying the imputed values to reflect plausible MNAR scenarios
 
-<!-- badges: start -->
-<!-- badges: end -->
+3.  Analyzing the modified datasets and combining the results using
+    Rubin’s rules
 
 # Installation
 
-You can install the development version of ovsa from
-[GitHub](https://github.com/) with:
+You can install the development version of ovsa from GitHub using either
+\*\**pak*
 
-    # install.packages("pak")
-    pak::pak("abdoulaye-dioni/ovsa")
+or **devtools**
 
-    # install.packages("devtools")  # Uncomment if you don't have devtools installed
-    devtools::install_github("abdoulaye-dioni/ovsa")
+``` r
+# install.packages("pak")
+pak::pak("abdoulaye-dioni/ovsa")
+```
+
+``` r
+# install.packages("devtools")
+devtools::install_github("abdoulaye-dioni/ovsa")
+```
 
 # Example
+
+Below is a simple workflow illustrating the main steps of the ovsa
+package for
+
+non hierarchical data.
 
 ``` r
 library(ovsa)
@@ -44,59 +54,51 @@ library(ovsa)
 data("simda") 
 head(simda)
 #>   id X2 X1 Y
-#> 1  1  3  5 0
-#> 2  2  1  4 0
-#> 3  3  3  5 0
-#> 4  4  1  1 0
-#> 5  5  1  1 0
-#> 6  6  2  1 0
+#> 1  1  c  5 1
+#> 2  2  c  3 0
+#> 3  3  c  5 1
+#> 4  4  b  2 0
+#> 5  5  c  2 0
+#> 6  6  b  4 0
 ```
 
-## The `simmnar` function from the `ovsa` package
+## Simulating MNAR with **simmnar()**
 
-Use the `simmnar` function from the `ovsa` package to simulate a Missing
-Not At Random (MNAR) mechanism in ordinal variables with specified
-probabilities for missing values.
-
-``` r
-set.seed(321) # for reproducibility
-simdaNA <- simmnar( data = simda, Y = "Y",  id = "id",
-ord_var = "X1", A = 2,  probA = 0.5, B = 4,  probB = 0.8) # use simmnar
-```
+Use the simmnar() function to simulate a Missing Not At Random (MNAR)
+mechanism for ordinal variables:
 
 ``` r
+set.seed(321)
+simdaNA <- simmnar(data = simda, Y = "Y",
+                   ord_var = "X1", A = 2, probA = 0.5,
+                   B = 4, probB = 0.8, verbose = TRUE)
+#> 192 missing values introduced into X1.mis.
 head(simdaNA)
 #>   id X2 X1 Y X1.mis
-#> 1  1  3  5 0      5
-#> 2  2  1  4 0   <NA>
-#> 3  3  3  5 0      5
-#> 4  4  1  1 0      1
-#> 5  5  1  1 0      1
-#> 6  6  2  1 0      1
-```
-
-``` r
+#> 1  1  c  5 1      5
+#> 2  2  c  3 0      3
+#> 3  3  c  5 1      5
+#> 4  4  b  2 0      2
+#> 5  5  c  2 0      2
+#> 6  6  b  4 0   <NA>
 summary(simdaNA)
 #>        id         X2      X1      Y        X1.mis   
-#>  Min.   :   1.0   1:248   1:272   0:576   1   :272  
-#>  1st Qu.: 250.8   2:247   2:118   1:424   2   : 89  
-#>  Median : 500.5   3:260   3:131           3   :131  
-#>  Mean   : 500.5   4:245   4:127           4   : 49  
-#>  3rd Qu.: 750.2           5:352           5   :352  
-#>  Max.   :1000.0                           NA's:107
-```
-
-``` r
+#>  Min.   :   1.0   a:249   1:126   0:607   1   :126  
+#>  1st Qu.: 250.8   b:248   2:162   1:393   2   :144  
+#>  Median : 500.5   c:257   3:178           3   :178  
+#>  Mean   : 500.5   d:246   4:254           4   : 80  
+#>  3rd Qu.: 750.2           5:280           5   :280  
+#>  Max.   :1000.0                           NA's:192
 str(simdaNA)
 #> 'data.frame':    1000 obs. of  5 variables:
 #>  $ id    : int  1 2 3 4 5 6 7 8 9 10 ...
-#>  $ X2    : Factor w/ 4 levels "1","2","3","4": 3 1 3 1 1 2 4 1 4 3 ...
-#>  $ X1    : Ord.factor w/ 5 levels "1"<"2"<"3"<"4"<..: 5 4 5 1 1 1 3 3 5 1 ...
-#>  $ Y     : Factor w/ 2 levels "0","1": 1 1 1 1 1 1 2 2 2 1 ...
-#>  $ X1.mis: Ord.factor w/ 5 levels "1"<"2"<"3"<"4"<..: 5 NA 5 1 1 1 3 3 5 1 ...
+#>  $ X2    : Factor w/ 4 levels "a","b","c","d": 3 3 3 2 3 2 2 2 3 1 ...
+#>  $ X1    : Ord.factor w/ 5 levels "1"<"2"<"3"<"4"<..: 5 3 5 2 2 4 2 5 5 4 ...
+#>  $ Y     : Factor w/ 2 levels "0","1": 2 1 2 1 1 1 1 2 2 1 ...
+#>  $ X1.mis: Ord.factor w/ 5 levels "1"<"2"<"3"<"4"<..: 5 3 5 2 2 NA 2 5 5 4 ...
 ```
 
-## The `firststep` function from the `ovsa` package
+## Step 1: Imputation under MAR with `firststep()`
 
 Use the `firststep` function from the `ovsa` package to impute missing
 values in a non-hierarchical context. This function performs the first
@@ -113,190 +115,218 @@ library(mice)
 #> Les objets suivants sont masqués depuis 'package:base':
 #> 
 #>     cbind, rbind
-imputed_mice <- firststep(simdaNA[, c("Y","X1.mis","X2")], mi = "mice",
-method = c("logreg", "polr", "polyreg"), m = 10,printFlag = FALSE)
+imputed_mice <- firststep(simdaNA[, c("Y", "X1.mis", "X2")],
+                          mi = "mice",
+                          method = c("logreg", "polr", "polyreg"),
+                          m = 10,
+                          printFlag = FALSE,verbose = FALSE)
+
+summary(complete(imputed_mice, 1))
+#>  Y       X1.mis  X2     
+#>  0:607   1:169   a:249  
+#>  1:393   2:192   b:248  
+#>          3:225   c:257  
+#>          4:100   d:246  
+#>          5:314
 ```
 
 ``` r
 summary(complete(imputed_mice,1))
 #>  Y       X1.mis  X2     
-#>  0:576   1:316   1:248  
-#>  1:424   2:105   2:247  
-#>          3:144   3:260  
-#>          4: 55   4:245  
-#>          5:380
+#>  0:607   1:169   a:249  
+#>  1:393   2:192   b:248  
+#>          3:225   c:257  
+#>          4:100   d:246  
+#>          5:314
 ```
 
-## The `secondstep` function from the `ovsa` package
-
-Use the `secondstep` function from the `ovsa` package to modifie imputed
-values in a non-hierarchical context. This function performs the second
-step of our sensitivity analysis for ordinal variables under a Missing
-Not At Random (MNAR) mechanism.
+## Step 2: Modify imputed values with `secondstep()`
 
 ``` r
 formula <- "X1.mis.mar ~ Y + X2"
-manydelta <- data.frame( delta1 = c(0,0,0,0), delta2 = c(0,-1,2,0),
-delta3 = c(0,0.5,0,0.5), delta4 = c(-1,0.5,0,1))
-level_ord_var = 5
-seed = 123
+manydelta <- data.frame(
+  delta1 = c(0, 0, 0, 0),
+  delta2 = c(0, -1, 2, 0),
+  delta3 = c(0, 0.5, 0, 0.5),
+  delta4 = c(-1, 0.5, 0, 1)
+)
+
+level_ord_var <- 5
+seed <- 123
 ```
 
 ``` r
-# Execution of the complete function
-out <- secondstep(data = simdaNA, mardata = imputed_mice,
-level_ord_var = level_ord_var, formula = formula, manydelta = manydelta,
-seed = seed)
+out <- secondstep_mice(data = simdaNA, mardata = imputed_mice,
+                  level_ord_var = level_ord_var,
+                  formula = formula,
+                  manydelta = manydelta,
+                  seed = seed)
+#> Preparing imputed datasets...
+#> Fitting ordinal regression models...
+#> Extracting and adjusting thresholds...
+#> Constructing latent variables and MNAR columns...
+#> Done. Returning modified datasets.
+
+summary(out$mnardata[[2]])
+#>  Y       X1.mis.mar X2       X1.mis         eta             etanew       
+#>  0:607   1:165      a:249   1   :126   Min.   :0.0000   Min.   :-3.0479  
+#>  1:393   2:191      b:248   2   :144   1st Qu.:0.2036   1st Qu.:-0.1249  
+#>          3:235      c:257   3   :178   Median :0.4624   Median : 0.6761  
+#>          4: 91      d:246   4   : 80   Mean   :0.6320   Mean   : 0.6745  
+#>          5:318              5   :280   3rd Qu.:1.1745   3rd Qu.: 1.4863  
+#>                             NA's:192   Max.   :1.4332   Max.   : 4.7238  
+#>  mnar1   mnar2   mnar3   mnar4  
+#>  1:167   1:167   1:167   1:134  
+#>  2:175   2:144   2:212   2:245  
+#>  3:228   3:328   3:191   3:191  
+#>  4: 99   4: 80   4:126   4:141  
+#>  5:331   5:281   5:304   5:289  
+#> 
 ```
 
 ``` r
 summary(out$mnardata[[2]])
-#>  Y       X1.mis.mar X2       X1.mis         eta               etanew       
-#>  0:576   1:314      1:248   1   :272   Min.   :-0.01683   Min.   :-3.0647  
-#>  1:424   2:100      2:247   2   : 89   1st Qu.: 0.00000   1st Qu.:-0.2196  
-#>          3:145      3:260   3   :131   Median : 0.27528   Median : 0.5475  
-#>          4: 53      4:245   4   : 49   Mean   : 0.49501   Mean   : 0.5375  
-#>          5:388              5   :352   3rd Qu.: 0.90447   3rd Qu.: 1.3276  
-#>                             NA's:107   Max.   : 1.17975   Max.   : 3.6617  
+#>  Y       X1.mis.mar X2       X1.mis         eta             etanew       
+#>  0:607   1:165      a:249   1   :126   Min.   :0.0000   Min.   :-3.0479  
+#>  1:393   2:191      b:248   2   :144   1st Qu.:0.2036   1st Qu.:-0.1249  
+#>          3:235      c:257   3   :178   Median :0.4624   Median : 0.6761  
+#>          4: 91      d:246   4   : 80   Mean   :0.6320   Mean   : 0.6745  
+#>          5:318              5   :280   3rd Qu.:1.1745   3rd Qu.: 1.4863  
+#>                             NA's:192   Max.   :1.4332   Max.   : 4.7238  
 #>  mnar1   mnar2   mnar3   mnar4  
-#>  1:309   1:288   1:309   1:280  
-#>  2: 97   2: 89   2:111   2:140  
-#>  3:145   3:179   3:131   3:131  
-#>  4: 54   4: 49   4: 77   4: 87  
-#>  5:395   5:395   5:372   5:362  
+#>  1:167   1:167   1:167   1:134  
+#>  2:175   2:144   2:212   2:245  
+#>  3:228   3:328   3:191   3:191  
+#>  4: 99   4: 80   4:126   4:141  
+#>  5:331   5:281   5:304   5:289  
 #> 
 ```
 
-## The `checkprop` function from the `ovsa` package
-
-Use the `checkprop` function from the `ovsa` package to assess the
-plausibility of imputed data under the MAR mechanism and the
-modifications made under MNAR mechanisms.
+## Check plausibility with `checkprop()`
 
 ``` r
-checkprop(data = out$mnardata, ord_mar = "X1.mis.mar",
-ord_mis = "X1.mis", manydelta = manydelta)
+checkprop(data = out$mnardata,
+          ord_mar = "X1.mis.mar",
+          ord_mis = "X1.mis",
+          manydelta = manydelta)
 #> $table
-#>         mar     mnar1    mnar2    mnar3     mnar4
-#> 1 36.448598 35.981308 16.35514 35.98131  9.813084
-#> 2 12.242991 12.523364  0.00000 25.42056 51.588785
-#> 3 14.485981 12.897196 49.90654  0.00000  0.000000
-#> 4  4.859813  4.859813  0.00000 21.86916 31.308411
-#> 5 31.962617 33.738318 33.73832 16.72897  7.289720
+#>        mar     mnar1     mnar2     mnar3     mnar4
+#> 1 23.22917 22.083333 22.083333 22.083333  4.322917
+#> 2 24.16667 22.604167  0.000000 40.677083 58.437500
+#> 3 24.63542 23.333333 76.875000  5.260417  5.260417
+#> 4  7.34375  9.427083  0.000000 21.250000 27.708333
+#> 5 20.62500 22.552083  1.041667 10.729167  4.270833
 #> 
 #> $plot
 ```
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
-## The `thirdstep` function from the `ovsa package`
-
-For MAR result
+## Step 4: Final analysis with `thirdstep()`
 
 ``` r
-formula = "Y ~X1.mis.mar + X2"
-thirdstep(data = out$mnardata, formula = formula)
+formula <- "Y ~ X1.mis.mar + X2"
+
+# Analysis for MAR
+thirdstep_mice(data = out$mnardata, formula = formula)
 #>           term   estimate std.error statistic       df      p.value      2.5 %
-#> 1  (Intercept) -1.4884197 0.1852394 -8.035116 881.9827 2.988086e-15 -1.8519811
-#> 2 X1.mis.mar.L  1.8485513 0.2083031  8.874334 188.0188 5.496901e-16  1.4376398
-#> 3 X1.mis.mar.Q -2.2080150 0.2276447 -9.699392 505.9427 1.626287e-20 -2.6552602
-#> 4 X1.mis.mar.C  0.3960548 0.2776616  1.426394 252.7139 1.549888e-01 -0.1507706
-#> 5 X1.mis.mar^4  0.8428731 0.2553765  3.300512 359.3026 1.061772e-03  0.3406527
-#> 6          X22  2.2998866 0.2675014  8.597660 729.1861 4.939782e-17  1.7747217
-#> 7          X23  1.1458318 0.2513398  4.558895 607.5630 6.220316e-06  0.6522315
-#> 8          X24  1.9200780 0.2620588  7.326899 789.0513 5.830050e-13  1.4056632
-#>       97.5 %   conf.low  conf.high
-#> 1 -1.1248583 -1.8519811 -1.1248583
-#> 2  2.2594628  1.4376398  2.2594628
-#> 3 -1.7607697 -2.6552602 -1.7607697
-#> 4  0.9428803 -0.1507706  0.9428803
-#> 5  1.3450935  0.3406527  1.3450935
-#> 6  2.8250514  1.7747217  2.8250514
-#> 7  1.6394321  0.6522315  1.6394321
-#> 8  2.4344928  1.4056632  2.4344928
-```
+#> 1  (Intercept) -1.3080085 0.1710881 -7.645232 831.4313 5.756427e-14 -1.6438240
+#> 2 X1.mis.mar.L  1.7617941 0.1921677  9.168003 190.2952 7.891561e-17  1.3827416
+#> 3 X1.mis.mar.Q  0.8804233 0.1730646  5.087251 521.6876 5.076434e-07  0.5404341
+#> 4 X1.mis.mar.C -0.4961025 0.2434016 -2.038206 124.3862 4.364951e-02 -0.9778477
+#> 5 X1.mis.mar^4  0.5495191 0.1991266  2.759647 300.6493 6.141448e-03  0.1576607
+#> 6          X2b  0.8299114 0.2253041  3.683516 733.7659 2.469434e-04  0.3875938
+#> 7          X2c  0.8180834 0.2221247  3.682991 773.1735 2.465609e-04  0.3820444
+#> 8          X2d  0.6811551 0.2299625  2.962027 488.7064 3.205055e-03  0.2293179
+#>        97.5 %   conf.low   conf.high
+#> 1 -0.97219305 -1.6438240 -0.97219305
+#> 2  2.14084651  1.3827416  2.14084651
+#> 3  1.22041250  0.5404341  1.22041250
+#> 4 -0.01435733 -0.9778477 -0.01435733
+#> 5  0.94137755  0.1576607  0.94137755
+#> 6  1.27222891  0.3875938  1.27222891
+#> 7  1.25412237  0.3820444  1.25412237
+#> 8  1.13299231  0.2293179  1.13299231
 
-For MNAR result
-
-``` r
-thirdstep(data = out$mnardata, manydelta = manydelta)
+# Analysis for MNAR
+thirdstep_mice(data = out$mnardata, manydelta = manydelta)
 #> $mnar1
 #>          term   estimate std.error statistic       df      p.value      2.5 %
-#> 1 (Intercept) -1.5101618 0.1886043 -8.007037 727.4657 4.655067e-15 -1.8804355
-#> 2     mnar1.L  1.8938796 0.2040124  9.283160 268.2313 5.783816e-18  1.4922103
-#> 3     mnar1.Q -2.2354285 0.2456111 -9.101495 171.2216 2.245079e-16 -2.7202442
-#> 4     mnar1.C  0.3210729 0.2676885  1.199428 507.9486 2.309209e-01 -0.2048399
-#> 5     mnar1^4  0.8823798 0.2671065  3.303475 203.9752 1.127752e-03  0.3557358
-#> 6         X22  2.3570505 0.2730596  8.632000 567.2126 6.092931e-17  1.8207191
-#> 7         X23  1.1708016 0.2528641  4.630162 603.9017 4.476256e-06  0.6742019
-#> 8         X24  1.9544865 0.2667947  7.325808 623.8824 7.372114e-13  1.4305622
-#>       97.5 %   conf.low  conf.high
-#> 1 -1.1398880 -1.8804355 -1.1398880
-#> 2  2.2955488  1.4922103  2.2955488
-#> 3 -1.7506129 -2.7202442 -1.7506129
-#> 4  0.8469858 -0.2048399  0.8469858
-#> 5  1.4090237  0.3557358  1.4090237
-#> 6  2.8933819  1.8207191  2.8933819
-#> 7  1.6674014  0.6742019  1.6674014
-#> 8  2.4784108  1.4305622  2.4784108
+#> 1 (Intercept) -1.3246051 0.1731645 -7.649404 628.9897 7.604332e-14 -1.6646556
+#> 2     mnar1.L  1.7000440 0.1861616  9.132087 292.6458 1.140050e-17  1.3336587
+#> 3     mnar1.Q  0.8856254 0.1791687  4.942970 269.4031 1.354169e-06  0.5328766
+#> 4     mnar1.C -0.4594599 0.2404779 -1.910612 137.9896 5.812875e-02 -0.9349580
+#> 5     mnar1^4  0.5965721 0.1955006  3.051510 409.2310 2.425271e-03  0.2122613
+#> 6         X2b  0.8200315 0.2253022  3.639696 674.5516 2.938367e-04  0.3776536
+#> 7         X2c  0.8266093 0.2201793  3.754255 830.5055 1.859712e-04  0.3944360
+#> 8         X2d  0.6909419 0.2237458  3.088067 746.2778 2.089271e-03  0.2516959
+#>        97.5 %   conf.low   conf.high
+#> 1 -0.98455461 -1.6646556 -0.98455461
+#> 2  2.06642929  1.3336587  2.06642929
+#> 3  1.23837433  0.5328766  1.23837433
+#> 4  0.01603811 -0.9349580  0.01603811
+#> 5  0.98088294  0.2122613  0.98088294
+#> 6  1.26240940  0.3776536  1.26240940
+#> 7  1.25878255  0.3944360  1.25878255
+#> 8  1.13018793  0.2516959  1.13018793
 #> 
 #> $mnar2
-#>          term   estimate std.error  statistic       df      p.value      2.5 %
-#> 1 (Intercept) -1.5003564 0.1767162 -8.4902035 883.8136 8.648985e-17 -1.8471888
-#> 2     mnar2.L  1.8943330 0.1974335  9.5947922 882.9608 8.338327e-21  1.5068393
-#> 3     mnar2.Q -1.8946152 0.2222258 -8.5256321 273.8960 1.040514e-15 -2.3321028
-#> 4     mnar2.C  0.3890474 0.2674634  1.4545815 982.4505 1.461045e-01 -0.1358179
-#> 5     mnar2^4  0.2171190 0.2356896  0.9212071 677.0857 3.572704e-01 -0.2456515
-#> 6         X22  2.1817683 0.2569922  8.4896300 544.8110 1.974727e-16  1.6769515
-#> 7         X23  1.0313774 0.2305003  4.4745167 845.2551 8.706092e-06  0.5789573
-#> 8         X24  1.8135124 0.2469484  7.3436884 792.7315 5.163442e-13  1.3287623
-#>       97.5 %   conf.low  conf.high
-#> 1 -1.1535241 -1.8471888 -1.1535241
-#> 2  2.2818266  1.5068393  2.2818266
-#> 3 -1.4571275 -2.3321028 -1.4571275
-#> 4  0.9139127 -0.1358179  0.9139127
-#> 5  0.6798894 -0.2456515  0.6798894
-#> 6  2.6865851  1.6769515  2.6865851
-#> 7  1.4837975  0.5789573  1.4837975
-#> 8  2.2982626  1.3287623  2.2982626
+#>          term   estimate std.error statistic       df      p.value      2.5 %
+#> 1 (Intercept) -1.2605386 0.1718069 -7.336948 988.9681 4.549263e-13 -1.5976866
+#> 2     mnar2.L  1.9345104 0.1852539 10.442480 844.9872 4.310624e-24  1.5708986
+#> 3     mnar2.Q  1.1115707 0.1726029  6.440048 789.0737 2.074171e-10  0.7727556
+#> 4     mnar2.C -0.3948537 0.2264007 -1.744048 979.8770 8.146431e-02 -0.8391397
+#> 5     mnar2^4  0.1973011 0.1874286  1.052673 986.3282 2.927486e-01 -0.1705036
+#> 6         X2b  0.8915681 0.2241798  3.977022 985.9341 7.488508e-05  0.4516437
+#> 7         X2c  0.8714537 0.2217619  3.929681 988.5640 9.097735e-05  0.4362755
+#> 8         X2d  0.7210555 0.2233824  3.227897 989.0082 1.288042e-03  0.2826975
+#>        97.5 %   conf.low   conf.high
+#> 1 -0.92339053 -1.5976866 -0.92339053
+#> 2  2.29812226  1.5708986  2.29812226
+#> 3  1.45038581  0.7727556  1.45038581
+#> 4  0.04943233 -0.8391397  0.04943233
+#> 5  0.56510579 -0.1705036  0.56510579
+#> 6  1.33149252  0.4516437  1.33149252
+#> 7  1.30663191  0.4362755  1.30663191
+#> 8  1.15941346  0.2826975  1.15941346
 #> 
 #> $mnar3
-#>          term   estimate std.error statistic        df      p.value      2.5 %
-#> 1 (Intercept) -1.5195589 0.1905306 -7.975407 927.60442 4.454125e-15 -1.8934799
-#> 2     mnar3.L  1.8703640 0.2067992  9.044347 133.21361 1.566330e-15  1.4613291
-#> 3     mnar3.Q -2.3760416 0.2425296 -9.796913 345.00407 3.724275e-20 -2.8530643
-#> 4     mnar3.C  0.4024658 0.2752099  1.462396  91.80963 1.470476e-01 -0.1441400
-#> 5     mnar3^4  1.3030697 0.2521711  5.167404 709.30142 3.088910e-07  0.8079787
-#> 6         X22  2.4082343 0.2762202  8.718531 737.57850 1.851093e-17  1.8659628
-#> 7         X23  1.2199235 0.2555751  4.773248 899.42771 2.115016e-06  0.7183305
-#> 8         X24  1.9962675 0.2710459  7.365054 788.24644 4.467823e-13  1.4642103
+#>          term   estimate std.error statistic       df      p.value      2.5 %
+#> 1 (Intercept) -1.3151007 0.1714331 -7.671220 902.6829 4.408252e-14 -1.6515545
+#> 2     mnar3.L  1.7923448 0.1793299  9.994679 539.0830 1.082898e-21  1.4400737
+#> 3     mnar3.Q  0.9473136 0.1742162  5.437574 535.7849 8.220201e-08  0.6050830
+#> 4     mnar3.C -0.3493832 0.2301950 -1.517770 125.6469 1.315844e-01 -0.8049447
+#> 5     mnar3^4  0.9276269 0.1860019  4.987190 711.8114 7.704828e-07  0.5624489
+#> 6         X2b  0.8464080 0.2267190  3.733290 862.7456 2.013894e-04  0.4014225
+#> 7         X2c  0.8243601 0.2223093  3.708167 936.8592 2.210288e-04  0.3880782
+#> 8         X2d  0.7203452 0.2283390  3.154718 749.5597 1.670696e-03  0.2720851
 #>       97.5 %   conf.low  conf.high
-#> 1 -1.1456379 -1.8934799 -1.1456379
-#> 2  2.2793988  1.4613291  2.2793988
-#> 3 -1.8990188 -2.8530643 -1.8990188
-#> 4  0.9490715 -0.1441400  0.9490715
-#> 5  1.7981607  0.8079787  1.7981607
-#> 6  2.9505057  1.8659628  2.9505057
-#> 7  1.7215166  0.7183305  1.7215166
-#> 8  2.5283246  1.4642103  2.5283246
+#> 1 -0.9786470 -1.6515545 -0.9786470
+#> 2  2.1446158  1.4400737  2.1446158
+#> 3  1.2895442  0.6050830  1.2895442
+#> 4  0.1061784 -0.8049447  0.1061784
+#> 5  1.2928048  0.5624489  1.2928048
+#> 6  1.2913934  0.4014225  1.2913934
+#> 7  1.2606419  0.3880782  1.2606419
+#> 8  1.1686052  0.2720851  1.1686052
 #> 
 #> $mnar4
-#>          term   estimate std.error  statistic        df      p.value      2.5 %
-#> 1 (Intercept) -1.5686285 0.1897447  -8.267050 973.43100 4.468514e-16 -1.9409841
-#> 2     mnar4.L  1.9871903 0.1962022  10.128276 320.39312 4.241320e-21  1.6011828
-#> 3     mnar4.Q -2.3506969 0.2305305 -10.196901 846.47858 4.157420e-23 -2.8031754
-#> 4     mnar4.C  0.2879418 0.2599561   1.107656  87.68908 2.710397e-01 -0.2286918
-#> 5     mnar4^4  1.3985874 0.2410387   5.802335 900.97791 9.051327e-09  0.9255247
-#> 6         X22  2.3750949 0.2684154   8.848580 955.84902 4.218333e-18  1.8483435
-#> 7         X23  1.2073468 0.2527399   4.777033 974.54225 2.052340e-06  0.7113697
-#> 8         X24  1.9820478 0.2650868   7.476976 980.11995 1.685203e-13  1.4618448
-#>       97.5 %   conf.low  conf.high
-#> 1 -1.1962728 -1.9409841 -1.1962728
-#> 2  2.3731977  1.6011828  2.3731977
-#> 3 -1.8982184 -2.8031754 -1.8982184
-#> 4  0.8045754 -0.2286918  0.8045754
-#> 5  1.8716501  0.9255247  1.8716501
-#> 6  2.9018464  1.8483435  2.9018464
-#> 7  1.7033240  0.7113697  1.7033240
-#> 8  2.5022508  1.4618448  2.5022508
+#>          term   estimate std.error statistic       df      p.value      2.5 %
+#> 1 (Intercept) -1.2924246 0.1718743 -7.519591 932.0179 1.290283e-13 -1.6297300
+#> 2     mnar4.L  1.6910924 0.1830848  9.236660 613.3348 4.108912e-19  1.3315432
+#> 3     mnar4.Q  1.2148767 0.1746557  6.955838 782.0813 7.408808e-12  0.8720272
+#> 4     mnar4.C -0.4424532 0.2132233 -2.075070 262.4164 3.895449e-02 -0.8622995
+#> 5     mnar4^4  1.0607755 0.1837247  5.773723 658.9475 1.194693e-08  0.7000191
+#> 6         X2b  0.8950674 0.2293793  3.902127 904.3498 1.024235e-04  0.4448897
+#> 7         X2c  0.8334793 0.2249550  3.705093 936.3176 2.236950e-04  0.3920049
+#> 8         X2d  0.7541997 0.2273538  3.317296 951.4716 9.433614e-04  0.3080269
+#>        97.5 %   conf.low   conf.high
+#> 1 -0.95511907 -1.6297300 -0.95511907
+#> 2  2.05064160  1.3315432  2.05064160
+#> 3  1.55772611  0.8720272  1.55772611
+#> 4 -0.02260695 -0.8622995 -0.02260695
+#> 5  1.42153192  0.7000191  1.42153192
+#> 6  1.34524515  0.4448897  1.34524515
+#> 7  1.27495374  0.3920049  1.27495374
+#> 8  1.20037246  0.3080269  1.20037246
 ```

@@ -1,11 +1,13 @@
 Package: ovsa
-Title: ovsa: Ordinal Variable Sensitivity Analysis
+Title: Ordinal Variable Sensitivity Analysis ('ovsa')
 Version: 0.0.0.9000
 Authors@R: 
-    c(person("Dioni", "Abdoulaye", , "abdoulayedioni3@gmail.com", role = c("aut", "cre")),
-    person("Bureau", "Alexandre", , "alexandre.bureau@fmed.ulaval.ca", role = "aut"),
-    person("Moore", "Lynne", , "lynne.moore@fmed.ulaval.ca", role = "aut"),
-    person("Eslami", "Aida", , "aida.eslami@fmed.ulaval.ca", role = "aut"))
+    c(
+    person("Dioni", "Abdoulaye", email = "abdoulayedioni3@gmail.com", role = c("aut", "cre")),
+    person("Bureau", "Alexandre", email = "alexandre.bureau@fmed.ulaval.ca", role = "aut"),
+    person("Moore", "Lynne", email = "lynne.moore@fmed.ulaval.ca", role = "aut"),
+    person("Eslami", "Aida", email = "aida.eslami@fmed.ulaval.ca", role = "aut")
+    )
 Description: 
     The ovsa package implements a method for conducting sensitivity analysis. 
     Imputation is a common technique for addressing missing data; however, 
@@ -13,27 +15,29 @@ Description:
     and MAR (Missing At Random) assumptions may not accurately reflect the true
     mechanisms behind the missing data. Therefore, it can be beneficial 
     to consider the MNAR (Missing Not At Random) mechanism and use a 
-    sensitivity analysis approach to evaluate deviations from MAR. This method is 
-    based on an algorithm presented in the article titled  "Sensitivity Analysis 
-    Method in the Presence of a Missing Not at Random Ordinal Independent Variable." 
-    The package can be applied in both non-hierarchical  and hierarchical contexts 
-    of binary response. However, the method should be used with caution, as it 
+    sensitivity analysis approach to evaluate deviations from MAR. This method applies the 
+    algorithm *Dioni et al.,2024* (Sensitivity Analysis 
+    Method in the Presence of a Missing Not at Random Ordinal Independent Variable).
+    The package can be applied in both non-hierarchical  and hierarchical contexts,
+    with a binary response. However, the method should be used with caution, as it 
     heavily relies on the assumption that certain specific (overrepresented) categories
     of an ordinal variable tend to be missing.
 License: GPL-3
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+URL: https://github.com/abdoulaye-dioni/ovsa
+BugReports: https://github.com/abdoulaye-dioni/ovsa/issues
 Depends: 
     R (>= 3.5.0)
-LazyData: true
-Suggests:
-    mitml,
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
 Imports: 
     jomo,
     mice,
     MASS,
     ggplot2
-URL: https://github.com/abdoulaye-dioni/ovsa
+Suggests:
+    mitml,
+    testthat (>= 3.0.0)
+LazyData: true
+RoxygenNote: 7.3.2
+Roxygen: list(markdown = TRUE)
+Config/testthat/edition: 3
+

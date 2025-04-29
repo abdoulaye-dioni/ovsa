@@ -2,74 +2,84 @@
 % Please edit documentation in R/checkprop.R
 \name{checkprop}
 \alias{checkprop}
-\title{Check the plausibility of imputed data under MAR and MNAR Mechanisms.}
+\title{Check the plausibility of imputed data under MAR and MNAR mechanisms}
 \usage{
 checkprop(data, ord_mar, ord_mis, manydelta, plot = TRUE)
 }
 \arguments{
-\item{data}{A list of data frames, where each data frame represents a dataset with
-hierarchical or repeated measurements.}
+\item{data}{A list of data frames, where each data frame corresponds to an imputed dataset.}
 
-\item{ord_mar}{A character string specifying the name of the ordinal variable
-obtained under the MAR mechanism.}
+\item{ord_mar}{Character string. Name of the ordinal variable imputed under the MAR assumption.}
 
-\item{ord_mis}{A character string specifying the name of the ordinal variable
-obtained under the MNAR mechanism.}
+\item{ord_mis}{Character string. Name of the original variable with missing values.}
 
-\item{manydelta}{A data frame containing a matrix with dimensions equal to
-the number of levels of the ordinal variable multiplied by \code{p}),
-where \code{p} is the
-number of columns representing different MNAR conditions.}
+\item{manydelta}{A data frame specifying the shifts applied to thresholds for different MNAR scenarios.}
 
-\item{plot}{A logical value. If \code{TRUE}, the function returns both the
-proportion table and a plot.
-If \code{FALSE}, only the proportion table is returned.}
+\item{plot}{Logical. If \code{TRUE} (default), returns both the proportions table and a plot.
+If \code{FALSE}, returns only the proportions table.}
 }
 \value{
-A list with two elements:
-\itemize{
-\item \code{table} A matrix of calculated proportions under MAR and MNAR mechanisms.
-\item \code{plot (Optional)} A ggplot2 object visualizing the proportions.
+If \code{plot = FALSE}, returns a table of proportions under MAR and MNAR mechanisms.
+If \code{plot = TRUE}, returns a list containing:
+\describe{
+\item{table}{A matrix of proportions (\%) under MAR and MNAR for each level.}
+\item{plot}{A \code{ggplot2} object visualizing the proportions.}
 }
 }
 \description{
-This function calculates proportions for each level under MAR and MNAR of the ordinal
-variable, computed across individuals initially missing for the specified variable.
+This function computes and optionally plots the proportions of each level
+of an ordinal variable under both MAR and MNAR mechanisms, based on multiple imputed datasets
+modified through sensitivity parameters.
+}
+\details{
+The function calculates, for each level of the ordinal variable, the average proportion
+across all imputations under MAR and under several MNAR scenarios defined via \code{manydelta}.
+The plot provides a visual comparison of how the distributions differ across mechanisms.
 }
 \examples{
+if (requireNamespace("ovsa", quietly = TRUE) && requireNamespace("mice", quietly = TRUE)) {
+  data(simda, package = "ovsa")
 
-head(simdaNA)
-str(simdaNA)
+  # Simulate MNAR missingness
+  simdaNA <- simmnar(data = simda, Y = "Y", ord_var = "X1",
+                     A = 1, probA = 0.3, B = 5, probB = 0.5)
 
-imputed_mice <- firststep(simdaNA[, c("Y","X1.mis","X2")], mi = "mice",
-method = c("logreg", "polr", "polyreg"), m = 10,printFlag = FALSE)
+  # Multiple imputation under MAR
+  imputed_mice <- firststep(
+    data = simdaNA[, c("Y", "X1.mis", "X2")],
+    mi = "mice",
+    method = c("logreg", "polr", "polyreg"),
+    m = 5,
+    printFlag = FALSE
+  )
 
-library(mice)
-library(ggplot2)
-summary(complete(imputed_mice,1))
+  # Apply threshold shifts for MNAR scenarios
+  formula <- "X1.mis ~ Y + X2"
+  manydelta <- data.frame(
+    delta1 = c(0, 0, 0, 0),
+    delta2 = c(0, 1, 2, 0),
+    delta3 = c(1, 0, 0, 2),
+    delta4 = c(-1, 0, 0, -1)
+  )
 
+  out <- secondstep_mice(
+    data = simdaNA, mardata = imputed_mice,
+    level_ord_var = 5, formula = formula,
+    manydelta = manydelta, seed = 123
+  )
 
-# Formula for ordinal regression
-formula <- "X1.mis.mar ~ Y + X2"
-manydelta <- data.frame( delta1 = c(0,0,0,0), delta2 = c(0,-1,2,0),
-delta3 = c(0,0.5,0,0.5), delta4 = c(-1,0.5,0,1))
-level_ord_var = 5
-seed = 123
-
-# Execution of the complete function
-out <- secondstep( data = simdaNA, mardata = imputed_mice,
-level_ord_var = level_ord_var, formula = formula, manydelta = manydelta,
-seed = seed)
-
-summary(out$mnardata[[2]])
-
-
-checkprop(data = out$mnardata, ord_mar = "X1.mis.mar",
- ord_mis = "X1.mis", manydelta = manydelta)
-
+  # Check plausibility of MNAR modifications
+  result <- checkprop(
+    data = out$mnardata,
+    ord_mar = "X1.mis.mar",
+    ord_mis = "X1.mis",
+    manydelta = manydelta
+  )
+  print(result$table)
+  print(result$plot)
+}
 
 }
-\keyword{MAR,}
-\keyword{MNAR,}
-\keyword{missing-data,}
-\keyword{proportions}
+\seealso{
+\code{\link{secondstep}}, \code{\link{secondstep_mice}}
+}

@@ -2,68 +2,49 @@
 % Please edit documentation in R/simmnar.R
 \name{simmnar}
 \alias{simmnar}
-\title{Simulate a Missing Not At Random (MNAR) mechanism in the Non-Hierarchical data}
+\title{Simulate a Missing Not At Random (MNAR) Mechanism in Non-Hierarchical Data}
 \usage{
-simmnar(data, Y, id = NULL, ord_var, A, probA, B, probB)
+simmnar(data, Y, ord_var, A, probA, B, probB, verbose = TRUE)
 }
 \arguments{
-\item{data}{A data.frame.}
+\item{data}{A \code{data.frame} containing the data.}
 
-\item{Y}{The name of the binary variable (0 or 1) used as a conditioning criterion.}
+\item{Y}{The name of the binary outcome variable (must contain 0 and 1 only).}
 
-\item{id}{An optional vector of identifiers. If NULL, a sequential index is used.}
+\item{ord_var}{The name of the ordinal variable where missingness is introduced.}
 
-\item{ord_var}{The name of the ordinal variable where missing values will be introduced.}
+\item{A}{Levels of \code{ord_var} for which missingness is introduced when \code{Y == 1}.}
 
-\item{A}{The levels of \code{ord_var} affected by the Group A mechanism.}
+\item{probA}{Probability of missingness in group A (between 0 and 1).}
 
-\item{probA}{The probability of introducing missing values for observations in Group \code{A}.}
+\item{B}{Levels of \code{ord_var} for which missingness is introduced when \code{Y == 0}.}
 
-\item{B}{The levels of \code{ord_var} affected by the Group B mechanism.}
+\item{probB}{Probability of missingness in group B (between 0 and 1).}
 
-\item{probB}{The probability of introducing missing values for observations in Group \code{B}.}
+\item{verbose}{Logical. If \code{TRUE}, prints the number of introduced missing values (default = TRUE).}
 }
 \value{
-A \code{data.frame} with a new column containing the modified \code{ord_var},
-now including missing values.
+A \code{data.frame} with a new column \code{<ord_var>.mis} containing missing values.
 }
 \description{
-This function simulates a MNAR mechanism
-by introducing missing values into an independent ordinal variable with
-specific probabilities,  based on a binary response variable.
+This function introduces missing values into an ordinal variable based on
+the response variable \code{Y} (binary), creating a MNAR mechanism with
+specified probabilities.
 }
 \examples{
-#  Example 1
+if (requireNamespace("ovsa", quietly = TRUE)) {
+  data(simda)
 
-set.seed(123) # for reproducibility
-simu <- data.frame(id = 1:1000,  Y = rbinom(1000, 1, 0.5),
-          X1 = ordered(sample(1:5, 1000, replace = TRUE)),
-          X2 = sample(letters[1:4], 1000, replace = TRUE))
+  simdaNA <- simmnar(
+    data = simda,
+    Y = "Y",
+    ord_var = "X1",
+    A = 1,
+    probA = 0.3,
+    B = 5,
+    probB = 0.5
+  )
 
-head(simu)
-
-simuNA <- simmnar( data = simu, Y = "Y",  id = "id", ord_var = "X1",
-                         A = 1,  probA = 0.3, B = 5,  probB = 0.5)# use simmnar
-
-head(simuNA)
-
-
-
-#  Example 2
-
-set.seed(321) # for reproducibility
-data("simda")
-head(simda)
-simdaNA <- simmnar( data = simda, Y = "Y",  id = "id",
-ord_var = "X1", A = 2,  probA = 0.5, B = 4,  probB = 0.8) # use simmnar
-
-head(simdaNA)
-
-summary(simdaNA)
+  summary(simdaNA)
 }
-\keyword{Context.}
-\keyword{MNAR,}
-\keyword{Non-Hierarchical}
-\keyword{Simulation,}
-\keyword{data,}
-\keyword{missing}
+}

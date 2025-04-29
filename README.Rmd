@@ -18,38 +18,44 @@ knitr::opts_chunk$set(
 
 ## Description
 
-The goal of the `ovsa` package is to perform sensitivity analysis for ordinal variables when specific categories of the ordinal variable are prone to missingness (Missing Not At Random).
+## Description
+The goal of the ovsa package is to perform sensitivity analysis for ordinal variables when specific categories are prone to missingness under a Missing Not At Random (MNAR) mechanism.
 
-Our sensitivity analysis containes three step
+1. Our sensitivity analysis procedure involves three main steps:
 
-1. Performing MI under MAR
+2. Performing multiple imputation (MI) under the MAR assumption and
 
-2. Modifying the imputed data to reflect plausible scenarios under MNAR
+Modifying the imputed values to reflect plausible MNAR scenarios
 
-3. Analyzing the modified data and combining the results according to Rubin’s rule.
+3. Analyzing the modified datasets and combining the results using Rubin’s rules
 
-<!-- badges: start -->
-<!-- badges: end -->
 
 
 # Installation
 
-You can install the development version of ovsa from [GitHub](https://github.com/) with:
+You can install the development version of ovsa from GitHub using either ***pak*
 
-```
+or **devtools**  
+
+```{r,eval=FALSE}
 # install.packages("pak")
 pak::pak("abdoulaye-dioni/ovsa")
 ```
 
-```
-# install.packages("devtools")  # Uncomment if you don't have devtools installed
+
+```{r,eval=FALSE}
+# install.packages("devtools")
 devtools::install_github("abdoulaye-dioni/ovsa")
 ```
 
 
 
+
 # Example
 
+Below is a simple workflow illustrating the main steps of the ovsa package for
+
+non hierarchical data.
 
 ```{r example}
 library(ovsa)
@@ -65,37 +71,35 @@ head(simda)
 
 
 
-## The `simmnar` function from the `ovsa` package
+## Simulating MNAR with **simmnar()**
 
-Use the `simmnar` function from the `ovsa` package to simulate a Missing Not At Random (MNAR) mechanism in ordinal variables with specified probabilities for missing values.
- 
-```{r}
-set.seed(321) # for reproducibility
-simdaNA <- simmnar( data = simda, Y = "Y",  id = "id",
-ord_var = "X1", A = 2,  probA = 0.5, B = 4,  probB = 0.8) # use simmnar
-```
-
+Use the simmnar() function to simulate a Missing Not At Random (MNAR) mechanism for ordinal variables:
 
 ```{r}
+set.seed(321)
+simdaNA <- simmnar(data = simda, Y = "Y",
+                   ord_var = "X1", A = 2, probA = 0.5,
+                   B = 4, probB = 0.8, verbose = TRUE)
 head(simdaNA)
-```
-
-```{r}
 summary(simdaNA)
-```
-
-```{r}
 str(simdaNA)
 ```
 
-## The `firststep` function from the `ovsa` package
+
+
+## Step 1: Imputation under MAR with `firststep()`
 
 Use the `firststep` function from the `ovsa` package to impute missing values in a non-hierarchical context. This function performs the first step of our sensitivity analysis for ordinal variables under a Missing Not At Random (MNAR) mechanism.
 
 ```{r}
 library(mice)
-imputed_mice <- firststep(simdaNA[, c("Y","X1.mis","X2")], mi = "mice",
-method = c("logreg", "polr", "polyreg"), m = 10,printFlag = FALSE)
+imputed_mice <- firststep(simdaNA[, c("Y", "X1.mis", "X2")],
+                          mi = "mice",
+                          method = c("logreg", "polr", "polyreg"),
+                          m = 10,
+                          printFlag = FALSE,verbose = FALSE)
+
+summary(complete(imputed_mice, 1))
 ```
 
 
@@ -104,49 +108,58 @@ summary(complete(imputed_mice,1))
 ```
 
 
-## The `secondstep` function from the `ovsa` package
+## Step 2: Modify imputed values with `secondstep()`
 
-Use the `secondstep` function from the `ovsa` package to modifie imputed values in a non-hierarchical context. This function performs the second step of our sensitivity analysis for ordinal variables under a Missing Not At Random (MNAR) mechanism.
+
 
 ```{r}
 formula <- "X1.mis.mar ~ Y + X2"
-manydelta <- data.frame( delta1 = c(0,0,0,0), delta2 = c(0,-1,2,0),
-delta3 = c(0,0.5,0,0.5), delta4 = c(-1,0.5,0,1))
-level_ord_var = 5
-seed = 123
+manydelta <- data.frame(
+  delta1 = c(0, 0, 0, 0),
+  delta2 = c(0, -1, 2, 0),
+  delta3 = c(0, 0.5, 0, 0.5),
+  delta4 = c(-1, 0.5, 0, 1)
+)
+
+level_ord_var <- 5
+seed <- 123
 ```
 
 ```{r}
-# Execution of the complete function
-out <- secondstep(data = simdaNA, mardata = imputed_mice,
-level_ord_var = level_ord_var, formula = formula, manydelta = manydelta,
-seed = seed)
+out <- secondstep_mice(data = simdaNA, mardata = imputed_mice,
+                  level_ord_var = level_ord_var,
+                  formula = formula,
+                  manydelta = manydelta,
+                  seed = seed)
+
+summary(out$mnardata[[2]])
 ```
 
 ```{r}
 summary(out$mnardata[[2]])
 ```
 
-## The `checkprop` function from the `ovsa` package
 
-Use the `checkprop` function from the `ovsa` package to assess the plausibility of imputed data under the MAR mechanism and the modifications made under MNAR mechanisms.
+##  Check plausibility with `checkprop()`
 
-```{r}
-checkprop(data = out$mnardata, ord_mar = "X1.mis.mar",
-ord_mis = "X1.mis", manydelta = manydelta)
-```
-
-## The `thirdstep` function from the `ovsa package`
-
-For MAR result
 
 ```{r}
-formula = "Y ~X1.mis.mar + X2"
-thirdstep(data = out$mnardata, formula = formula)
+checkprop(data = out$mnardata,
+          ord_mar = "X1.mis.mar",
+          ord_mis = "X1.mis",
+          manydelta = manydelta)
 ```
 
-For MNAR result
+
+## Step 4: Final analysis with `thirdstep()`
 
 ```{r}
-thirdstep(data = out$mnardata, manydelta = manydelta)
+formula <- "Y ~ X1.mis.mar + X2"
+
+# Analysis for MAR
+thirdstep_mice(data = out$mnardata, formula = formula)
+
+# Analysis for MNAR
+thirdstep_mice(data = out$mnardata, manydelta = manydelta)
 ```
+

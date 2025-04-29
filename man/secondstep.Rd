@@ -2,74 +2,26 @@
 % Please edit documentation in R/secondstep.R
 \name{secondstep}
 \alias{secondstep}
-\title{Modifying the mice imputed data to reflect plausible scenarios under MNAR}
+\title{Second Step: Apply MNAR Transformation to MAR-Imputed Data}
 \usage{
-secondstep(
-  data,
-  mardata,
-  level_ord_var,
-  formula,
-  manydelta,
-  mean = 0,
-  sd = 1,
-  seed = NULL,
-  ...
-)
+secondstep(data, mi = c("mice", "jomo"), ...)
 }
 \arguments{
-\item{data}{A dataframe containing missing values to be imputed.}
+\item{data}{A data.frame (for \code{mice}) or a list of imputed datasets (for \code{jomo}).}
 
-\item{mardata}{Data imputed under MAR using the MICE package.}
+\item{mi}{Character string. Indicates the imputation method used: either \code{"mice"} or \code{"jomo"}.}
 
-\item{level_ord_var}{The number of ordinal variable levels.}
-
-\item{formula}{A formula that will be used in the ordinal regression.}
-
-\item{manydelta}{A dataframe containing level_ord_var * p,
-where p is the number of columns.}
-
-\item{mean}{The mean of the normal distribution.}
-
-\item{sd}{The standard deviation of the normal distribution.}
-
-\item{seed}{For reproducibility.}
-
-\item{...}{Additional arguments passed to the functions.}
+\item{...}{Additional arguments passed to either \code{\link{secondstep_mice}} or \code{\link{secondstep_jomo}}.}
 }
 \value{
-A dataframe that contains the modified data under the MNAR mechanism,
-as well as the new intercept parameters and the old intercept parameters.
+A list containing the MNAR-modified datasets and additional components
+depending on the underlying method used (e.g., threshold matrices).
 }
 \description{
-This function performs imputation of missing data in a dataset using either
-the MICE or JOMO package, depending on the specified method. The MICE
-package utilizes multiple imputation by chained equations, while JOMO employs
-a multilevel imputation approach.
+This function serves as a wrapper to apply a second imputation step under MNAR mechanisms.
+It routes to the appropriate method-specific function depending on the imputation engine used
+in the first step, either \code{"mice"} or \code{"jomo"}.
 }
-\examples{
-
-head(simdaNA)
-str(simdaNA)
-
-imputed_mice <- firststep(simdaNA[, c("Y","X1.mis","X2")], mi = "mice",
-method = c("logreg", "polr", "polyreg"), m = 10,printFlag = FALSE)
-
-library(mice)
-summary(complete(imputed_mice,1))
-
-
-# Formula for ordinal regression
-formula <- "X1.mis.mar ~ Y + X2"
-manydelta <- data.frame( delta1 = c(0,0,0,0), delta2 = c(0,1,2,0),
-delta3 = c(1,0,0,2), delta4 = c(-1,0,0,-1))
-level_ord_var = 5
-seed = 123
-
-# Execution of the complete function
-out <- secondstep( data = simdaNA, mardata = imputed_mice,
-level_ord_var = level_ord_var, formula = formula, manydelta = manydelta,
-seed = seed)
-
-summary(out$mnardata[[2]])
-
+\seealso{
+\code{\link{secondstep_mice}}, \code{\link{secondstep_jomo}}
 }

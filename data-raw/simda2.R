@@ -1,43 +1,51 @@
-simulation_hierachical <- function(length_x1, length_x2, formula_x1, formula_y, para_x1,  betas,n_clus,n_obs,sd_U) {
-  x2 <- factor(sample(1:length_x2, n_clus*n_obs, replace = TRUE, prob = rep(0.25,4)))
-  eta_x1 <- model.matrix(as.formula(formula_x1), data.frame( x2 = x2))[,-1] %*% as.matrix(para_x1)
-  prob_x1 <-  t(apply(eta_x1, 1, function(x) exp(x - max(x)) / sum(exp(x - max(x)))))
-  x1 <- ordered(apply(prob_x1, 1, function(p) sample(1:length(p), 1, prob = p)))
-  clus <- rep(1:n_clus, each=n_obs)
-  U <- rnorm(n_clus, mean=0, sd = sd_U)
-  ZU <- U[clus]
-  eta_y <- model.matrix(as.formula(formula_y), data = data.frame(x1 = x1, x2 = x2)) %*%betas + ZU
-  prob_y <- plogis(eta_y)
-  y <- as.factor(rbinom(n_clus*n_obs, 1, prob_y))
+devtools::load_all()
 
-  return(data.frame(id = seq_len(n_clus*n_obs), y = y, x1 = x1,  x2 = x2, clus = clus))
-}
+# Generate a simulated hierarchical dataset
 
+length_X1 <- 3  # Number of ordered levels for X1
+length_X2 <- 4  # Number of unordered levels for X2 (A, B, C, D)
 
-set.seed(100)
-nsim = 500
-n_clus = 10
-n_obs = 200
-length_x1 <- 3
-length_x2 = 4
-sd_U = 0.45
-A = 1
-B = 3
+formula_X1 <- "~ X2"
+formula_Y <- "~ X1 + X2"
 
+# Correct para_X1: it must have (length_X2 - 1) rows and length_X1 columns
+# So here: (4 - 1) = 3 rows, 3 columns
+para_X1 <- matrix(
+  c(
+    2, 1.5, 2.5,   # coefficients pour X2_B
+    1, 2.5, 1.5,   # coefficients pour X2_C
+    2.5, 1, 2      # coefficients pour X2_D
+  ),
+  nrow = 3,
+  byrow = TRUE
+)
 
-formula_x1 <- "~ x2"
-para_x1 <- matrix(c(rep(2,3), rep(1,3),rep(2.5,3) ),ncol = 3)
+# Correct beta: it must match the number of columns of model.matrix(~ X1 + X2)
+# Components:
+# (Intercept) + (length_X1 - 1) + (length_X2 - 1)
+# = 1 + (3 - 1) + (4 - 1) = 1 + 2 + 3 = 6
+# So 6 coefficients needed
+beta <- c(-1, 1, -2, 2, 1, 2)
 
+# Other parameters
+n_clus <- 10    # Number of clusters
+n_obs <- 500    # Observations per cluster
+sd_U <- 0.45    # Standard deviation of the random effects
+seed <- 123     # Seed for reproducibility
 
-formula_y <- "~ x1 + x2"
-betas <- c(-1, 1, -2, 2,  1, 2)
+# Generate the dataset
+simda2 <- simulate_bin_hier(
+  length_X1 = length_X1,
+  length_X2 = length_X2,
+  formula_X1 = formula_X1,
+  formula_Y = formula_Y,
+  para_X1 = para_X1,
+  beta = beta,
+  n_clus = n_clus,
+  n_obs = n_obs,
+  sd_U = sd_U,
+  seed = seed
+)
 
-
-datas <-  lapply(1:nsim, function(simulation) {
-  data <- simulation_hierachical(length_x1, length_x2, formula_x1, formula_y, para_x1,  betas,n_clus,n_obs,sd_U)
-  return(data)
-})
-
-simda2 <- datas[[1]]
-
+# Save the dataset into the /data/ folder
 usethis::use_data(simda2, overwrite = TRUE)

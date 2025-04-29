@@ -2,57 +2,84 @@
 % Please edit documentation in R/simmnar2.R
 \name{simmnar2}
 \alias{simmnar2}
-\title{Simulate a Missing Not At Random (MNAR) Mechanism in the Hierarchical data}
+\title{Simulate a Missing Not At Random (MNAR) Mechanism in Hierarchical Data}
 \usage{
-simmnar2(data, proba, cat_var, Y, id, ord_var, A, B)
+simmnar2(
+  data,
+  proba,
+  cat_var,
+  Y,
+  id,
+  ord_var,
+  A,
+  B,
+  seed = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
-\item{data}{A dataframe containing the dataset.}
+\item{data}{A data.frame containing the dataset.}
 
-\item{proba}{A named list or dataframe containing the probabilities of missingness
-for each stratum of \code{cat_var}. Each stratum must contain a vector of two probabilities:
+\item{proba}{A named list or data.frame containing the probabilities of missingness
+for each stratum of \code{cat_var}. Each stratum must provide two probabilities:
 one for group A and one for group B.}
 
-\item{cat_var}{The name of the categorical variable (stratification variable).}
+\item{cat_var}{Character. The name of the stratification (categorical) variable.}
 
-\item{Y}{The name of the binary variable indicating group membership (1 for group A, 0 for group B).}
+\item{Y}{Character. The name of the binary variable indicating group membership (1 = group A, 0 = group B).}
 
-\item{id}{The name of the variable identifying unique individuals.}
+\item{id}{Character. The name of the variable identifying unique individuals.}
 
-\item{ord_var}{The name of the ordinal variable where missingness will be introduced.}
+\item{ord_var}{Character. The name of the ordinal variable where missingness will be introduced.}
 
-\item{A}{a vector of values in \code{ord_var} defining group A.}
+\item{A}{A vector of levels in \code{ord_var} defining group A.}
 
-\item{B}{a vector of values in \code{ord_var} defining group B.}
+\item{B}{A vector of levels in \code{ord_var} defining group B.}
+
+\item{seed}{Optional. Numeric. Seed for reproducibility. Default is \code{NULL} (no fixed seed).}
+
+\item{verbose}{Logical. If \code{TRUE}, prints progress messages. Default is \code{FALSE}.}
 }
 \value{
-A dataframe with a new column named \verb{<ord_var>.mis}, containing the ordinal variable
-with missing values introduced under the MNAR mechanism.
+A data.frame identical to \code{data} with an additional column
+named \code{<ord_var>.mis}, containing the ordinal variable with missing values.
 }
 \description{
 This function simulates a Missing Not At Random (MNAR) mechanism by introducing
-missing values into an independent ordinal variable with specific probabilities
-based on a binary response variable and a independent categorical variable.
+missing values into an independent ordinal variable, with specific probabilities,
+based on a binary response variable and a categorical stratification variable.
+}
+\details{
+The missingness is introduced separately within each level of \code{cat_var},
+allowing for a hierarchical MNAR structure. Probabilities must be provided
+for each stratum and differ between groups A and B.
 }
 \examples{
+if (requireNamespace("ovsa", quietly = TRUE)) {
+  data("simda2", package = "ovsa")
+  head(simda2)
 
- data("simda2")
- head(simda2)
+  missing_prob <- data.frame(matrix(c(0.2,0.3,0.1,0.4,0.4,0.1,0.1,0.3),
+    nrow = 2, byrow = FALSE, dimnames = list(c("0", "1"), paste0("proba", 1:4))))
 
- missing_prob <- data.frame(matrix(c(0.2,0.3,0.5,0.4,0.4,0.2,0.3,0.3),
- nrow = 2, byrow = FALSE,dimnames = list(c("0","1"),paste0("proba",1:4))))
- missing_prob
+  simda2NA <- simmnar2(
+    data = simda2,
+    proba = missing_prob,
+    cat_var = "X2",
+    Y = "Y",
+    id = "id",
+    ord_var = "X1",
+    A = 1,
+    B = 3,
+    seed = 123,
+    verbose = TRUE
+  )
 
- set.seed(215) # for reproducibility
- simda2NA <- simmnar2(data = simda2,proba = missing_prob,cat_var = "x2",
- Y = "y", id = "id", ord_var = "x1", A = 1, B = 3)
-
- simda2NA[102:108,]
-
- summary(simda2NA)
-
+  head(simda2NA)
+  summary(simda2NA)
 }
-\keyword{Context.}
+}
+\keyword{Context}
 \keyword{Hierarchical}
 \keyword{MNAR,}
 \keyword{Simulation,}
