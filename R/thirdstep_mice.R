@@ -1,5 +1,7 @@
 #' Perform Rubin's rule
 #'
+#' @description
+#'
 #' This function  performs either MAR (Missing At Random) or
 #' MNAR (Missing Not At Random) analysis based on the provided inputs.
 #' It fits generalized linear models (GLMs) with a logistic link function and

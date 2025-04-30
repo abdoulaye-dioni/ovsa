@@ -1,5 +1,7 @@
 #' Check the plausibility of imputed data under MAR and MNAR mechanisms
 #'
+#' @description
+#'
 #' This function computes and optionally plots the proportions of each level
 #' of an ordinal variable under both MAR and MNAR mechanisms, based on multiple imputed datasets
 #' modified through sensitivity parameters.

@@ -1,5 +1,7 @@
 #' Second Step: Apply MNAR Transformation to MAR-Imputed Data
 #'
+#' @description
+#'
 #' This function serves as a wrapper to apply a second imputation step under MNAR mechanisms.
 #' It routes to the appropriate method-specific function depending on the imputation engine used
 #' in the first step, either \code{"mice"} or \code{"jomo"}.
