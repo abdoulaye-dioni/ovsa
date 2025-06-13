@@ -153,7 +153,7 @@ checkprop <- function(data, ord_mar, ord_mis, manydelta, plot = TRUE) {
     ggplot2::labs(
       title = "Proportions under MAR and MNAR Mechanisms",
       x = "Levels",
-      y = "Proportion (%)"
+      y = "Proportion (%) of Imputed Categories (Missing Observations)"
     ) +
     ggplot2::theme_minimal() +
     ggplot2::theme(
