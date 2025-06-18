@@ -219,21 +219,6 @@ checkprop(data = out$mnardata,
 
 ## Step 4: Final analysis with `thirdstep_mice()`
 
-Les noms `mnar1.L`, `mnar1.Q`, `mnar1.C` et `mnar1^4` désignent les
-composantes polynomiales associées à la variable ordinale `mnar1`,
-générées automatiquement par la codification `contr.poly` dans *R*. Plus
-précisément :
-
-- `.L` correspond à la composante **linéaire**,
-- `.Q` à la composante **quadratique**,
-- `.C` à la composante **cubique**,
-- `^4` à la composante **quartique**.
-
-Par ailleurs, `MNAR 1` désigne les résultats de l’analyse de sensibilité
-sous le scénario défini par le vecteur de sensibilité delta1.  
-Le même raisonnement s’applique respectivement pour `MNAR 2`, `MNAR 3`
-et `MNAR 4`.
-
 ``` r
 formula <- "Y ~ X1.mis.mar + X2"
 
